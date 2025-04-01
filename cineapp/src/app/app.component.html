@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="app.component.css" />
+  </head>
+
+
+  <body>
+    
+    <div class="cuadrado">
+
+      <form>
+          <label for="nombre">Email</label>
+          <input type="text" id="nombre" [(ngModel)]="loginInfo.email" name="nombre" required>
+  
+          <!-- <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required> -->
+  
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" [(ngModel)]="loginInfo.password" name="password" required>
+          <!-- <a>{{loginInfo.email}}</a> -->
+          
+          <button type="submit">Register</button>
+          
+          <button type="submit" (click)="login()">Log in</button>
+          <div *ngIf="error" class="alert alert-danger" role="alert">
+              {{error}}
+          </div>
+      </form>
+  </div>
+  </body>
+</html>

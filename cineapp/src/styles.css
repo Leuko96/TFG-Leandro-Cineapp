@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+html,body {
+    background-image: url("/app/fondo_provisional.webp");
+    background-size: 100% 100%; /* Forzar que la imagen ocupe toda la pantalla */
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
