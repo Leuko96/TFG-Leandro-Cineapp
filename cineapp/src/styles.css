@@ -1,10 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
-html,body {
-    background-image: url("/app/fondo_provisional.webp");
-    background-size: 100% 100%; /* Forzar que la imagen ocupe toda la pantalla */
-    background-position: center;
-    background-repeat: no-repeat;
+/* Reset básico */
+body, html {
     margin: 0;
     padding: 0;
-    height: 100vh;
-}
+    height: 100%;
+  }
+  
+  /* Fondo morado cinematográfico - FORZADO */
+  body {
+    background: linear-gradient(135deg, #6a0dad 0%, #2d0b59 100%) !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+    color: white !important;
+  }
+  
+  /* Contenedor raíz de Angular */
+  app-root {
+    display: block;
+    min-height: 100vh;
+    position: relative;
+  }

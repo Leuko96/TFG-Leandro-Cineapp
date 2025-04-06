@@ -1,0 +1,4 @@
+Asuntos a resolver:
+
+O no llega bien a Inicio o Inicio no limpia lo que hay en app component. Tengo que verlo y 
+seguramente pregunte a chatgpt
