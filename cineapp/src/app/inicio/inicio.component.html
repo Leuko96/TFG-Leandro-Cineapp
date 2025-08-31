@@ -3,53 +3,53 @@
     <!-- Barra lateral izquierda -->
     <div class="sidebar">
       <!-- inicio.component.html -->
-<div class="layout-container">
-    <!-- Barra lateral izquierda - Versión con barras horizontales -->
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <h2>Menú</h2>
-      </div>
-      
-      <div class="menu-item" routerLink="/buscar" routerLinkActive="active">
-        <div class="menu-icon">🔍</div>
-        <div class="menu-text">Buscar</div>
-      </div>
-      
-      <div class="menu-item" routerLink="/recomendaciones" routerLinkActive="active">
-        <div class="menu-icon">⭐</div>
-        <div class="menu-text">Recomendaciones</div>
-      </div>
-      
-      <div class="menu-item" routerLink="/red-social" routerLinkActive="active">
-        <div class="menu-icon">👥</div>
-        <div class="menu-text">Red Social</div>
-      </div>
-      
-      <div class="menu-item" routerLink="/listas" routerLinkActive="active">
-        <div class="menu-icon">📋</div>
-        <div class="menu-text">Mis Listas</div>
-      </div>
-      
-      <div class="menu-item" routerLink="/ajustes" routerLinkActive="active">
-        <div class="menu-icon">⚙️</div>
-        <div class="menu-text">Ajustes</div>
-      </div>
-    </div>
-  
-    <!-- Contenido principal (centro-derecha) -->
-    <div class="main-content">
-      <!-- ... (tu contenido existente) ... -->
-    </div>
-  </div>
+        <div class="layout-container">
+            <!-- Barra lateral izquierda - Versión con barras horizontales -->
+            <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Menú</h2>
+            </div>
+            
+            <div class="menu-item" routerLink="/search-films" routerLinkActive="active">
+                <div class="menu-icon">🔍</div>
+                <div class="menu-text">Buscar</div>
+            </div>
+            
+            <div class="menu-item" routerLink="/recomendaciones" routerLinkActive="active">
+                <div class="menu-icon">⭐</div>
+                <div class="menu-text">Recomendaciones</div>
+            </div>
+            
+            <div class="menu-item" routerLink="/red-social" routerLinkActive="active">
+                <div class="menu-icon">👥</div>
+                <div class="menu-text">Red Social</div>
+            </div>
+            
+            <div class="menu-item" routerLink="/listas" routerLinkActive="active">
+                <div class="menu-icon">📋</div>
+                <div class="menu-text">Mis Listas</div>
+            </div>
+            
+            <div class="menu-item" routerLink="/ajustes" routerLinkActive="active">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-text">Ajustes</div>
+            </div>
+            </div>
+        
+            <!-- Contenido principal (centro-derecha) -->
+            <div class="main-content">
+            <!-- ... (tu contenido existente) ... -->
+            </div>
+        </div>
     </div>
   
     <!-- Contenido principal (centro-derecha) -->
     <div class="main-content">
       <div class="profile-summary">
-        <h3>Bienvenido, {{nombre}}</h3>
-        <!-- <img [src]="usuario.avatar" alt="Foto de perfil"> -->
-        <p>Miembro desde: {{nombre}}</p>
-      </div>
+      <img [src]="'assets/avatar-default.png'  " alt="Logo del usuario" class="user-logo">
+      <h3>Bienvenido, {{ nombre }} {{ apellido1 }} {{ usuarioSesion?.apellido2 }}</h3>
+      <p>Miembro desde: {{ fecharegistro  }}</p>
+    </div>
   
       <div class="recommendations">
         <h4>Recomendaciones para ti</h4>
@@ -61,6 +61,10 @@
       <div class="activity-feed">
         <h4>Actividad reciente</h4>
         <!-- Lista de actividades -->
+      </div>
+
+      <div [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
       </div>
     </div>
   </div>

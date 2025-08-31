@@ -4,6 +4,15 @@ export interface Login {
   password: string;
 }
 
+export interface Register {
+  name: string;
+  surname1: string;
+  surname2: string;
+  email: string;
+  password: string;
+  favourite_film:string;
+}
+
 export interface JwtResponse {
   jwt: string;
 }
@@ -25,6 +34,8 @@ export interface UsuarioSesion {
   apellido1: string;
   apellido2: string;
   email: string;
+  fecha_registro: Date;
+  avatar?: string;
   jwt: string;
 }
 

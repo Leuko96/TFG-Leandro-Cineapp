@@ -1,0 +1,36 @@
+<div class="search-container">
+  <!-- Barra de búsqueda -->
+
+  <div class="search-bar">
+    <button class="close-btn" (click)="closeSearch()">✖</button>
+    <input
+      type="text"
+      [(ngModel)]="query" 
+      placeholder="Buscar películas o series..."
+      (keyup.enter)="search()"
+    />
+    <button (click)="search()">🔍</button>
+  </div>
+
+  <!-- Resultados -->
+  <div class="results" *ngIf="results.length > 0; else noResults">
+    <h3>Resultados de "query"</h3>
+    <div class="movie-grid">
+      <div class="movie-card" *ngFor="let movie of results">
+        <img
+          [src]="movie.poster || 'assets/default-poster.png'"
+          [alt]="movie.title"
+        />
+        <h4>{{movie.title }}</h4>
+        <p>{{movie.year}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje si no hay resultados -->
+  <ng-template #noResults>
+    <div class="no-results" *ngIf="query">
+      <p>No se encontraron resultados para {{query}}</p>
+    </div>
+  </ng-template>
+</div>

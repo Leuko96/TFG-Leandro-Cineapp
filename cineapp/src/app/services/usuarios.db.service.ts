@@ -7,6 +7,7 @@ export const usuarios: UsuarioSesion [] = [
     apellido1: 'Chicano',
     apellido2: 'García',
     email: 'chicano@uma.es',
+    fecha_registro: new Date("null"),
     jwt: 'eyJhbGci',
     // roles: [
     //   {rol: Rol.ADMINISTRADOR},

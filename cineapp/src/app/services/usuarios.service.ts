@@ -28,6 +28,8 @@ export class UsuariosService {
         apellido1: obj.usuario.apellido1,
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
+        fecha_registro: obj.usuario.fecha_registro,
+        avatar: obj.usuario.avatar,
         // roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
         jwt: obj.jwt
       };
@@ -62,9 +64,12 @@ export class UsuariosService {
     }
   }
 
-  get rolCentro(): String | undefined {
+  public get rolCentro(): String | undefined {
     return "ROLCENTRO";
   }
+
+
+
 
   // set rolCentro(r: RolCentro | undefined) {
   //   this._rolCentro = r;

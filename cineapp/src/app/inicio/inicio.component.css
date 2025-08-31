@@ -124,3 +124,11 @@ button, .menu-item {
     pointer-events: none;
     z-index: -1;
   }
+.user-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%; /* lo hace circular */
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+}

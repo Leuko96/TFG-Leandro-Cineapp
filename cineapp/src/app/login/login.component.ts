@@ -16,7 +16,9 @@ export class LoginComponent {
     error: string = '';
   
     constructor(private usuarioService: UsuariosService, private router: Router) {}
-  
+    register(){
+      this.router.navigate(['/register']);
+    }
     login() {
       this.usuarioService.doLogin(this.loginInfo).subscribe({
         next: (usuario) => {
@@ -33,6 +35,7 @@ export class LoginComponent {
         }
       });
     }
+    
   
     get usuario() {
       return this.usuarioService.getUsuarioSesion();

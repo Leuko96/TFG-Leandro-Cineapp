@@ -9,14 +9,21 @@ import { FRONTEND_URI } from "../config/config";
 // import { Hueco } from "../calendario/hueco.model";
 
 // Este servicio imita al backend pero utiliza localStorage para almacenar los datos
+let now: Date = new Date();
+const year = now.getFullYear();   
+const month = now.getMonth();
+const day =  now.getDate(); 
+
 const usuariosC: Usuario [] = [
   {
     id: 1,
-    nombre: 'Admin',
-    apellido1: 'Admin',
-    apellido2: 'Admin',
+    nombre: 'Leandro',
+    apellido1: 'Martin',
+    apellido2: 'Calvo',
     email: 'admin@uma.es',
     administrador: true,
+    avatar:'./image.png',
+    fecha_registro: new Date(year, month, day),  
     password: 'admin',
     entrenador: true,
   },
@@ -27,6 +34,7 @@ const usuariosC: Usuario [] = [
     apellido2: 'Ramos',
     email: 'antonio@uma.es',
     administrador: false,
+    fecha_registro: new Date(year, month, day),
     password: '5678',
     entrenador: false,
   },

@@ -1,0 +1,66 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Evita el desplazamiento */
+}
+
+body {
+    background-image: url('/assets/fondo_provisional.webp');
+    background-size: cover; /* Cubre toda la pantalla */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+}
+
+h1.title {
+    text-align: right;
+    margin: 0; /* Elimina el margen predeterminado del h1 */
+}
+
+.cuadrado {
+    width: 300px; /* Ancho del cuadrado */
+    padding: 20px;
+    background-color: #8a4ff0; /* Fondo blanco */
+    background-image: linear-gradient(blue, purple);
+    border-radius: 10px; /* Esquinas redondeadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    text-align: center; /* Centrar el texto */
+    position: absolute; /* Posicionamiento absoluto */
+    top: 50%; /* Centrar verticalmente */
+    left: 50%; /* Centrar horizontalmente */
+    transform: translate(-50%, -50%); /* Ajustar el centrado */
+}
+
+
+/* Estilos del formulario */
+.cuadrado form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre elementos */
+}
+
+.cuadrado label {
+    text-align: left;
+    font-weight: bold;
+}
+
+.cuadrado input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.cuadrado button {
+    padding: 10px;
+    background-color: #007bff; /* Color azul */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cuadrado button:hover {
+    background-color: #0056b3; /* Color azul más oscuro al pasar el mouse */
+}
+ 
