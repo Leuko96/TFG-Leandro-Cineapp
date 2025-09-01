@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Login, UsuarioSesion, Rol } from "../entities/login";
 import { Observable, of, forkJoin, concatMap, lastValueFrom } from "rxjs";
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import * as jose from 'jose';
 
 import { Usuario } from "../entities/usuario";
@@ -64,9 +64,7 @@ export class UsuariosService {
     }
   }
 
-  public get rolCentro(): String | undefined {
-    return "ROLCENTRO";
-  }
+  
 
 
 

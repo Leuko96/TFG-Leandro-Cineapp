@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Usuario, UsuarioImpl } from '../entities/usuario';
 import { UsuariosService } from '../services/usuarios.service';
-import { FirebaseService } from '../services/firebase.service'
+import { FirebaseService } from '../services/firebase.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -53,9 +53,7 @@ export class InicioComponent {
     return this.usuarioService.getUsuarioSesion();
   }
 
-  get actualizarRol() {
-    return this.usuarioService.rolCentro;
-  }
+
 
   get logo(){
     return this.usuarioSesion?.avatar;

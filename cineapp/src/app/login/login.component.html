@@ -1,6 +1,6 @@
 <div class="cuadrado">
 
-    <form>
+    <form (ngSubmit)="login()">
         <label for="nombre">Email</label>
         <input type="text" id="nombre" [(ngModel)]="loginInfo.email" name="nombre" required>
 
@@ -11,9 +11,9 @@
         <input type="password" id="password" [(ngModel)]="loginInfo.password" name="password" required>
         <!-- <a>{{loginInfo.email}}</a> -->
         
-        <button type="submit">Register</button>
+        <button type="submit" routerLink="/register" routerLinkActive="active" class="btn btn-primary mb-3">Register</button>
         
-        <button class="btn btn-primary mb-3" (click)="login()">Log in</button>
+        <button class="btn btn-primary mb-3">Log in</button>
         <div *ngIf="error" class="alert alert-danger" role="alert">
             {{error}}
         </div>
