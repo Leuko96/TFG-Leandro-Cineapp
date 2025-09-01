@@ -47,8 +47,9 @@
     <div class="main-content">
       <div class="profile-summary">
       <img [src]="'assets/avatar-default.png'  " alt="Logo del usuario" class="user-logo">
-      <h3>Bienvenido, {{ nombre }} {{ apellido1 }} {{ usuarioSesion?.apellido2 }}</h3>
-      <p>Miembro desde: {{ fecharegistro  }}</p>
+      <!-- <h3>Bienvenido, {{ nombre }} {{ apellido1 }} {{ usuarioSesion?.apellido2 }}</h3> -->
+      <h3>Bienvenido, {{ this.nombre }} {{this.apellido1}} {{ this.apellido2}}</h3>
+      <p>Miembro desde: {{ this.fecharegistro | date:'dd/MM/yyyy' }}</p>
     </div>
   
       <div class="recommendations">

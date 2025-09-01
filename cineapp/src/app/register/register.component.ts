@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router, RouterOutlet } from '@angular/router';
 import { UsuariosService } from '../services/usuarios.service';
 // import { doc, setDoc, getDoc, addDoc } from "firebase/firestore";
-import { Firestore,collection, addDoc} from "@angular/fire/firestore"
+import { Firestore,collection, addDoc, setDoc, doc} from "@angular/fire/firestore"
 import { getFirestore } from "firebase/firestore";
 import { AuthService } from '../services/auth.service';
 import { Register } from '../entities/register'
@@ -24,10 +24,10 @@ export class RegisterComponent {
         async register(){
           try{
             
-            await this.auth.register(this.registerInfo.email,this.registerInfo.password);
+            const user = await this.auth.register(this.registerInfo.email,this.registerInfo.password);
             // const db = getFirestore();
-            const document = collection(this.firestore,"Usuarios")
-            addDoc(document,
+            
+            await setDoc(doc(this.firestore,"Usuarios", user.uid),
               {
                 administrador: false,
                 apellido1: this.registerInfo.surname1,

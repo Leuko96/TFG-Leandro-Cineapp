@@ -1,4 +1,6 @@
 Asuntos a resolver:
 
-O no llega bien a Inicio o Inicio no limpia lo que hay en app component. Tengo que verlo y 
-seguramente pregunte a chatgpt
+- Seguridad y contraseñas con un formato concreto
+- Acceder a los datos del documento del usuario que se 
+ha loggeado (he conseguido acceder al usuario autenticado pero no 
+guardo tanta información )

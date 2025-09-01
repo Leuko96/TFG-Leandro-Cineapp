@@ -1,14 +1,23 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, provideAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, validatePassword} from "@angular/fire/auth";
-import { doc, setDoc, getDoc, Firestore, addDoc } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore"
-
+import { Auth, provideAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User, signOut, validatePassword, getAuth, onAuthStateChanged, user} from "@angular/fire/auth";
+// import { doc, setDoc, getDoc, Firestore, addDoc } from "firebase/firestore";
+// import { getFirestore } from "firebase/firestore"
+import { BehaviorSubject } from 'rxjs';
+import { doc , Firestore, getDoc} from "@angular/fire/firestore"
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
-  
-  // private firestore = inject(Firestore);
+  private userSubject = new BehaviorSubject<User | null>(null);
+  private firestore = inject(Firestore);
+  user$ = this.userSubject.asObservable();
+
+  constructor(){
+    onAuthStateChanged(this.auth, (user) => {
+      this.userSubject.next(user);
+    });
+  }
+  // 
 
    async register(email: string, password: string) {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
@@ -24,34 +33,22 @@ export class AuthService {
     return signOut(this.auth);
   }
 
-  // getCurrentUser() {
-  //   return this.auth.currentUser;
-  // }
-  // async register(email: string, password: string, nombre: string) {
-  //   const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-  //   const user = userCredential.user;
-
-  //   // Guardar datos extra en Firestore
-  //   await setDoc(doc(db, "usuarios", user.uid), {
-  //     nombre,
-  //     email: user.email,
-  //     fecha_registro: new Date(),
-  //     rol: "usuario"
-  //   });
-
-  //   return user;
-  // }
-
-  // async login(email: string, password: string) {
-  //   const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-  //   const user = userCredential.user;
-
-  //   // Recuperar perfil de Firestore
-  //   const userDoc = await getDoc(doc(db, "usuarios", user.uid));
-  //   return userDoc.exists() ? userDoc.data() : null;
-  // }
-
   getCurrentUser() {
+    const usr = this.auth.currentUser;
+    if(usr){
+      const displayName = usr.displayName
+      const email = usr.email;
+      // const photoURL = usr.photoURL;
+      // const emailVerified = usr.emailVerified;
+      const uid = usr.uid;
+    }
     return this.auth.currentUser;
   }
+
+  // async getDocumentProfile(uid, colecction_name: string){
+  //   const docref = doc(this.firestore,colecction_name,uid);
+  //   const userDoc = await getDoc(docref);
+  //   return userDoc;
+  // }
+  
 }
