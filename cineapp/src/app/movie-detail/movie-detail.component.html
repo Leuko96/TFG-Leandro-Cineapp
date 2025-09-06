@@ -1,0 +1,48 @@
+<div class="movie-detail-layout" *ngIf="movie">
+
+  <!-- Poster -->
+  <div class="poster-section">
+    <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" />
+  </div>
+
+  <!-- Información de la película -->
+  <div class="info-section">
+    <h2>{{ movie.title }}</h2>
+    <p class="tagline">{{ movie.tagline }}</p>
+    <p class="overview">{{ movie.overview }}</p>
+
+    <ul class="details">
+      <li><strong>Fecha:</strong> {{ movie.release_date }}</li>
+      <li><strong>Idioma:</strong> {{ movie.original_language }}</li>
+      <li><strong>Puntuación:</strong> ⭐ {{ movie.vote_average }}</li>
+      <li><strong>Duración:</strong> {{ movie.runtime }} min</li>
+      <li><strong>Popularidad:</strong> {{ movie.popularity }}</li>
+      <li><strong>Compañías:</strong> {{ movie.production_companies }}</li>
+    </ul>
+  </div>
+
+  Reviews
+  <div class="reviews-section">
+    <h3>Reviews</h3>
+
+    <div class="reviews-list">
+      <div *ngIf="reviews.length === 0" class="no-reviews">
+        <p>Aún no hay reviews para esta película. Sé el primero 😉</p>
+      </div>
+
+      <div *ngFor="let r of reviews" class="review-card">
+        <div class="review-header">
+          <span class="review-user">{{ r.email }}</span>
+          <span class="review-date">{{ r.date.toDate() | date:'short' }}</span>
+        </div>
+        <p class="review-text">{{ r.text }}</p>
+      </div>
+    </div>
+
+    <div class="add-review">
+      <textarea [(ngModel)]="newReview" placeholder="Escribe tu opinión..."></textarea>
+      <button (click)="addReview()">Enviar</button>
+    </div>
+  </div>
+
+</div>

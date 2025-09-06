@@ -14,12 +14,13 @@ import { environment } from './enviroments/environment';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';// Inicializa Firebase
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-
+import { provideHttpClient } from '@angular/common/http';
 // export const db = getFirestore(app);
 
 // const analytics = getAnalytics(app);
 bootstrapApplication(AppComponent, {
   providers: [
+  provideHttpClient(),
   provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
   provideAuth(() => getAuth()),
   provideFirestore(() => getFirestore()),
