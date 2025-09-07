@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Firestore, doc, getDoc, collection, addDoc, getDocs, query, where } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Movie} from '../entities/movie';
+import { useDeviceLanguage } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-movie-detail',
@@ -14,19 +15,46 @@ import { Movie} from '../entities/movie';
   styleUrl: './movie-detail.component.css'
 })
 export class MovieDetailComponent implements OnInit{
-  movieId!: string;
+  movieId: string="";
   movie: any;
   reviews: any[] = [];
   newReview: string = "";
-  title : string="";
-  constructor(private route: ActivatedRoute, private firestore: Firestore, private auth: AuthService) {}
+
+  id: number = 0;
+  title: string = "";
+  genres: string = "";
+  original_language: string = "";
+  overview: string = "";
+  popularity: number = 0;
+  production_companies: string = "";
+  release_date: string = "";
+  budget: number = 0;
+  revenue: number = 0;
+  runtime: number = 0;
+  status: string = "";
+  tagline: string = "";
+  vote_average: number = 0;
+  vote_count: number = 0;
+  credits: string = "";
+  keywords: string = "";
+  poster_path:string = "";
+  backdrop_path: string = "";
+  recommendations: string = "";
+
+  constructor(private route: ActivatedRoute, private router: Router, private firestore: Firestore, private auth: AuthService) {}
 
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('id')!;
-    console.log(this.movieId);
     await this.loadMovie();
     await this.loadReviews();
   }
+
+
+  // getUserById(id: string) {
+  //   const userDocRef = doc(this.firestore, `users/${id}`);
+  //   return docData(userDocRef, { idField: 'id' }); 
+  // }
+
 
   async loadMovie() {
     const docRef = collection(this.firestore, "Peliculas");
@@ -35,15 +63,45 @@ export class MovieDetailComponent implements OnInit{
     // if (snapshot.exists()) {
     //   this.movie = { id: snapshot.id, ...snapshot.data() };
     // }
+    console.log(this.movieId);
 
-    const q = query(docRef, where("id", "==", "50000000"));
+    const userDocRef = doc(this.firestore, `Peliculas/${this.movieId}`);
+    const peli = await getDoc(userDocRef);
     
-    const querySnapshot = await getDocs(q);
+    if(peli.exists()){
+      const peli_data = peli.data();
+      this.title = peli_data["title"];
+      this.production_companies = peli_data["production_companies"];
+      this.vote_count = peli_data["vote_count"];
+      this.original_language = peli_data["original_language"];
+      this.vote_average = peli_data["vote_average"];
+      this.tagline = peli_data["tagline"];
+      this.revenue = peli_data["revenue"];
+      this.status = peli_data["status"];
+      this.runtime = peli_data["runtime"];
+      this.release_date = peli_data["release_date"];
+      this.recommendations = peli_data["recommendations"];
+      this.poster_path = peli_data["poster_path"];
+      this.popularity = peli_data["popularity"];
+      this.overview = peli_data["overview"];
+      
+      console.log(peli_data["title"]);
 
-    querySnapshot.forEach((doc)=>{console.log(doc.id, "=>", doc.data)})
+      return peli_data;
+    }
+    else{
+      return null;
+    }
+    // const q = query(docRef, where("id", "==", this.movieId));
+    
+    // const querySnapshot = await getDocs(q);
 
-    this.movie = { id: querySnapshot.docs.at(0)?.id, ...querySnapshot.docs.at(0)?.data };
-    console.log(querySnapshot.empty)
+    // querySnapshot.forEach((doc)=>{console.log(doc.id, "=>", doc.data())})
+
+    // this.movie = { id: querySnapshot.docs.at(0)?.id, ...querySnapshot.docs.at(0)?.data() };
+    // console.log(querySnapshot.empty)
+
+
     // this.movie = querySnapshot.docs.map(doc => ({
     //   id: doc.id,        // guardamos el id del doc
     //   ...doc.data()      // "spread": todos los campos del documento
@@ -75,5 +133,9 @@ export class MovieDetailComponent implements OnInit{
 
     this.newReview = "";
     await this.loadReviews(); // recargar reviews
+  }
+
+  goBack() {
+    this.router.navigate(["/inicio"]);
   }
 }

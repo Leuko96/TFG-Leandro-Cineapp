@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
-import { Firestore, collection, addDoc} from "@angular/fire/firestore"
+import { Firestore, collection, addDoc, doc, setDoc, query, getDocs, deleteDoc} from "@angular/fire/firestore"
 import { Movie } from '../entities/movie';
 
 @Injectable({
@@ -82,6 +82,46 @@ export class MovieService {
       console.log(`✅ Guardada: ${movie.title}`);
     } catch (err) {
       console.error("❌ Error guardando:", err);
+    }
+  }
+  async change_id(){
+    try{
+      const docRef = collection(this.firestore, "Peliculas")
+      const querySnapshot = await getDocs(docRef);
+      
+      let errorCount = 0;
+      let successCount = 0;
+      
+      // const new_Id = oldDoc_data["id"].toString();
+      // console.log(oldDoc.id + " -> " + oldDoc_data["title"] + new_Id);
+
+    
+      
+      for (const oldDoc of querySnapshot.docs){
+        
+        const movieData = oldDoc.data();
+        const newId = movieData["id"].toString();
+         if (!newId) {
+            console.warn(`Documento ${oldDoc.id} no tiene campo 'id', saltando...`);
+            errorCount++;
+            continue;
+        } 
+        const nweDocRef = doc(this.firestore, "Peliculas", newId);
+        await setDoc(nweDocRef,movieData);
+        await deleteDoc(oldDoc.ref);
+       
+
+      //   const newDocRef = doc(this.firestore, "Peliculas", oldDoc.id);
+      //   await setDoc(newDocRef, movieData);
+
+      //     // Eliminar el documento viejo (solo si se creó el nuevo correctamente)
+      //   await deleteDoc(oldDoc.ref);
+
+        console.log(`Migrado: ${oldDoc.id} -> ${newId}`);
+        successCount++;
+      }
+    } catch(error){
+      throw error;
     }
   }
 }

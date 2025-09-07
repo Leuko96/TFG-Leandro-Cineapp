@@ -26,6 +26,7 @@ export class LoadMoviesComponent {
       const movies = await this.movieService.getMovies(offset,batchSize);
 
       for(let movie of movies){
+        
         await this.movieService.saveMovie(movie);
       }
       // await this.movieService.saveMovie(movies);
@@ -34,5 +35,9 @@ export class LoadMoviesComponent {
     }
     this.status = "✅ Dataset cargado en Firestore";
     
+  }
+
+  change_id(){
+    this.movieService.change_id();
   }
 }

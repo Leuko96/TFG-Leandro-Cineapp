@@ -1,0 +1,28 @@
+<div class="list-detail">
+  <h2>{{ list?.name }}</h2>
+  <p>{{ list?.description }}</p>
+
+  <!-- Sección de películas -->
+  <div class="movies-grid">
+    <div class="movie-card" *ngFor="let movie of movies">
+      <img [src]="getPoster(movie.poster_path)" [alt]="movie.title">
+      <h4>{{ movie.title }}</h4>
+    </div>
+  </div>
+
+  <!-- Buscador para añadir -->
+  <div class="add-movies">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar películas..." (keyup.enter)="searchMovies()">
+    <button (click)="searchMovies()">🔍</button>
+  </div>
+
+  <div class="results" *ngIf="searchResults.length > 0">
+    <div class="result-card" *ngFor="let r of searchResults">
+      <img [src]="getPoster(r.poster_path)" [alt]="r.title">
+      <div>
+        <h5>{{ r.title }}</h5>
+        <button (click)="addToList(r.id)">➕ Añadir</button>
+      </div>
+    </div>
+  </div>
+</div>

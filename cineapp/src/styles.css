@@ -7,6 +7,7 @@ body, html {
   
   /* Fondo morado cinematográfico - FORZADO */
   body {
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #6a0dad 0%, #2d0b59 100%) !important;
     background-attachment: fixed !important;
     min-height: 100vh !important;
@@ -19,3 +20,6 @@ body, html {
     min-height: 100vh;
     position: relative;
   }
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+    }

@@ -1,0 +1,90 @@
+.list-detail {
+  padding: 2rem;
+  color: #fff;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.movie-card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.movie-card:hover {
+  transform: translateY(-4px);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.movie-card h4 {
+  margin: 0.5rem;
+  font-size: 1rem;
+}
+
+.add-movies {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.add-movies input {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+.add-movies button {
+  padding: 0.6rem 1rem;
+  background: #3f51b5;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.results {
+  background: rgba(255,255,255,0.1);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.result-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.result-card img {
+  width: 50px;
+  border-radius: 6px;
+}
+
+.result-card button {
+  padding: 0.3rem 0.8rem;
+  background: #4caf50;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}

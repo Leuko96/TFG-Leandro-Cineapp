@@ -1,27 +1,32 @@
-<div class="movie-detail-layout" *ngIf="movie">
+<div class="movie-detail-layout">
+
+  <!-- Botón volver -->
+  <div class="back-button">
+    <button (click)="goBack()">⬅ Volver</button>
+  </div>
 
   <!-- Poster -->
   <div class="poster-section">
-    <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" />
+    <img [src]="'https://image.tmdb.org/t/p/w500' + poster_path" alt="{{ title }}" />
   </div>
 
   <!-- Información de la película -->
   <div class="info-section">
-    <h2>{{ movie.title }}</h2>
-    <p class="tagline">{{ movie.tagline }}</p>
-    <p class="overview">{{ movie.overview }}</p>
+    <h2>{{ title }}</h2>
+    <p class="tagline"> "{{ tagline }}"</p>
+    <p class="overview">{{ overview }}</p>
 
     <ul class="details">
-      <li><strong>Fecha:</strong> {{ movie.release_date }}</li>
-      <li><strong>Idioma:</strong> {{ movie.original_language }}</li>
-      <li><strong>Puntuación:</strong> ⭐ {{ movie.vote_average }}</li>
-      <li><strong>Duración:</strong> {{ movie.runtime }} min</li>
-      <li><strong>Popularidad:</strong> {{ movie.popularity }}</li>
-      <li><strong>Compañías:</strong> {{ movie.production_companies }}</li>
+      <li><strong>Fecha:</strong> {{ release_date }}</li>
+      <li><strong>Idioma:</strong> {{ original_language }}</li>
+      <li><strong>Puntuación:</strong> {{ vote_average }} ⭐</li>
+      <li><strong>Duración:</strong> {{ runtime }} min</li>
+      <li><strong>Popularidad:</strong> {{ popularity }}</li>
+      <li><strong>Compañías:</strong> {{ production_companies }}</li>
     </ul>
   </div>
 
-  Reviews
+  <!-- Reviews -->
   <div class="reviews-section">
     <h3>Reviews</h3>
 
