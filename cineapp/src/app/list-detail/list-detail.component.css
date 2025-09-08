@@ -3,24 +3,71 @@
   color: #fff;
 }
 
-h2 {
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.list-header h2 {
   font-family: 'Playfair Display', serif;
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  margin: 0;
+}
+
+.count {
+  background: rgba(255,255,255,0.2);
+  padding: 0.3rem 0.7rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.actions button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.description {
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  color: #bbb;
 }
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
-  margin: 1.5rem 0;
+  background: #3f236f;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
+
 .movie-card {
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
   overflow: hidden;
   text-align: center;
+  position: relative;
   transition: transform 0.2s;
 }
 
@@ -28,63 +75,217 @@ h2 {
   transform: translateY(-4px);
 }
 
-.movie-card img {
+.poster-wrapper {
+  position: relative;
+}
+
+.poster-wrapper img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,0,0,0.8);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.poster-wrapper:hover .remove-btn {
+  opacity: 1;
 }
 
 .movie-card h4 {
-  margin: 0.5rem;
+  margin: 0.6rem;
   font-size: 1rem;
-}
-
-.add-movies {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.add-movies input {
-  flex: 1;
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-}
-
-.add-movies button {
-  padding: 0.6rem 1rem;
-  background: #3f51b5;
-  border: none;
-  border-radius: 8px;
   color: #fff;
-  cursor: pointer;
 }
 
-.results {
-  background: rgba(255,255,255,0.1);
-  padding: 1rem;
-  border-radius: 10px;
-}
 
-.result-card {
+/* Fondo oscuro difuminado */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.8rem;
+  z-index: 2000;
 }
 
-.result-card img {
-  width: 50px;
-  border-radius: 6px;
+/* Caja modal */
+.modal {
+  background: #fff;
+  color: #333;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
 }
 
-.result-card button {
-  padding: 0.3rem 0.8rem;
-  background: #4caf50;
+.modal h2 {
+  font-family: 'Playfair Display', serif;
+  color: #3f51b5;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.6rem 1rem;
   border: none;
-  border-radius: 6px;
-  color: white;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
+}
+
+.modal-actions button:first-child {
+  background: #3f51b5;
+  color: #fff;
+}
+
+.modal-actions button:first-child:hover {
+  background: #2c3e9f;
+}
+
+.modal-actions button:last-child {
+  background: #ccc;
+  color: #333;
+}
+
+.modal-actions button:last-child:hover {
+  background: #aaa;
+}
+
+/* .create-form *{
+  display: flex;
+  margin-bottom: 1rem;
+} */
+
+/* --------------------------- */
+
+
+.create-section {
+  background: #fff;
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.create-section h2 {
+  font-family: 'Playfair Display', serif;
+  color: #3f51b5;
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.create-form input,
+.create-form textarea {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+}
+textarea{
+  height: 10rem;
+}
+.create-form button {
+  padding: 0.6rem;
+  background: #3f51b5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  /* transition: background 0.3s; */
+}
+
+.create-form button:hover {
+  background: #2c3e9f;
+}
+/* .create-form input{
+  margin-bottom: 1rem;
+} */
+
+/* Estilos para el botón de añadir película */
+.add-movie-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-height: 290px;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.add-movie-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-4px);
+}
+
+.add-icon {
+  font-size: 3rem;
+  font-weight: 200;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.add-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 0 10px;
+}
+
+/* Asegurar que el grid se comporte correctamente */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+/* Responsividad para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .add-movie-card {
+    min-height: 250px;
+  }
+  
+  .add-icon {
+    font-size: 2.5rem;
+  }
 }

@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Movie } from '../entities/movie';
-
-import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
-
+import { ListsService } from '../services/lists.service';
+import { Firestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion } from '@angular/fire/firestore';
+import { AuthService } from '../services/auth.service';
+import { arrayRemove } from 'firebase/firestore';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-search-films',
   standalone: true,
@@ -15,9 +17,15 @@ import { Firestore, collection, getDocs, query, where } from '@angular/fire/fire
 })
 export class SearchFilmsComponent {
 
+  showModal = false;
+  userLists: any[] = []; // listas del usuario
+  selectedMovie: any = null;
   titulo: string = "";
   results: any[]=[];
-  constructor(private firestore: Firestore, private router: Router) {}
+  successMessage: string = "";
+  
+  constructor(private firestore: Firestore, private router: Router, private listservice: ListsService, 
+    private auth: AuthService, private loc:Location) {}
 
   async search(){
 
@@ -62,25 +70,10 @@ export class SearchFilmsComponent {
     // }));
 
   }
-  // query: string = '';
-  // results: { title: string; year: string; poster?: string }[] = [];
-  
-  // constructor(private router: Router) {}
 
-  // search() {
-  //   // Simulación de resultados de búsqueda
-  //   if (this.query.trim()) {
-  //     this.results = [
-  //       { title: 'The Godfather', year: '1972', poster: 'assets/godfather.jpg' },
-  //       { title: 'Pulp Fiction', year: '1994', poster: 'assets/pulpfiction.jpg' },
-  //       { title: 'Interstellar', year: '2014', poster: 'assets/interstellar.jpg' }
-  //     ].filter(movie => movie.title.toLowerCase().includes(this.query.toLowerCase()));
-  //   } else {
-  //     this.results = [];
-  //   }
-  // }
   closeSearch() {
-    this.router.navigate(['/inicio']); // Ajustá la ruta según a dónde quieras volver
+    this.loc.back();
+    // this.router.navigate(['/inicio']); // Ajustá la ruta según a dónde quieras volver
   }
 
   separateTitle(titulo: string): string []{
@@ -102,4 +95,44 @@ export class SearchFilmsComponent {
   goToDetail(id: string) {
     this.router.navigate(['/movie', id]);
   }
+
+
+  async openAddToList(movie: any, event: MouseEvent) {
+  // event.stopPropagation(); // evita que se ejecute goToDetail
+  this.selectedMovie = movie;
+  this.showModal = true;
+
+  // TODO: cargar listas del usuario desde Firestore
+  const userId = this.auth.getCurrentUser()?.uid;
+  if(userId != null)
+    this.userLists = await this.listservice.getUserLists(userId);
+  else
+    this.closeModal();
+}
+
+  
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedMovie = null;
+  }
+
+  async addMovieToList(movieId: string, listId: string) {
+    console.log(`Añadiendo película ${movieId} a lista ${listId}`);
+
+    const docRef = doc(this.firestore,"Lists",listId);
+    const updateList = await updateDoc(docRef,
+      {
+        "movieIds": arrayUnion(movieId)
+      }
+    );
+    this.successMessage = "✅ Successfully updated list :)";
+    setTimeout(() => {
+      this.successMessage = "";
+    }, 3000);
+    this.closeModal();
+  }
+
+  
+
 }

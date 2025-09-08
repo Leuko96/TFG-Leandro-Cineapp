@@ -16,17 +16,36 @@
   <div class="results" *ngIf="results.length > 0; else noResults">
     <h3>Resultados de {{titulo}}</h3>
     <div class="movie-grid">
-      <div class="movie-card" *ngFor="let movie of results" (click)="goToDetail(movie.id)">
-        <img
-          [src]="getPosterUrl(movie.poster_path, 'original')"
-          [alt]="movie.title"
-        />
-        <h4>{{movie.title }}</h4>
-        <p>{{movie.release_date}}</p>
-      </div>
-    </div>
+  <div class="movie-card" *ngFor="let movie of results">
+    <button class="add-small-btn" (click)="openAddToList(movie, $event)">💾</button>
+    <img
+      [src]="getPosterUrl(movie.poster_path, 'original')"
+      [alt]="movie.title"
+      (click)="goToDetail(movie.id)"
+    />
+    <h4>{{movie.title}}</h4>
+    <p>{{movie.release_date}}</p>
+  </div>
+</div>
   </div>
 
+  <!-- Popup -->
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()"></div>
+    <div class="modal" *ngIf="showModal">
+      <h3>Selecciona una lista</h3>
+      <ul>
+        <li *ngFor="let list of userLists">
+          <button (click)="addMovieToList(selectedMovie.id, list.id)">
+            {{ list.name }}
+          </button>
+        </li>
+      </ul>
+      <button class="close-modal" (click)="closeModal()">Cerrar</button>
+    </div>
+
+    <div class="success-message" *ngIf="successMessage"> 
+      {{ successMessage }}
+    </div>
   <!-- Mensaje si no hay resultados -->
   <ng-template #noResults>
     <div class="no-results" *ngIf="titulo">

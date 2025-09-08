@@ -1,28 +1,50 @@
 <div class="list-detail">
-  <h2>{{ list?.name }}</h2>
-  <p>{{ list?.description }}</p>
+  <div class="list-header">
+    <h2>{{ list?.name }}</h2>
+    <span class="count">{{ movies.length }} películas</span>
+    <div class="actions">
+      <button class="share-btn">🔗 Compartir</button>
+      <button class="edit-btn" (click)="openEdit()">✏️ Editar</button>
+    </div>
+  </div>
+
+  <p class="description">{{ list?.description }}</p>
 
   <!-- Sección de películas -->
   <div class="movies-grid">
     <div class="movie-card" *ngFor="let movie of movies">
-      <img [src]="getPoster(movie.poster_path)" [alt]="movie.title">
+      <div class="poster-wrapper">
+        <img [src]="getPoster(movie.poster_path)" [alt]="movie.title">
+        <button class="remove-btn" (click)="onRemove(movie)">✖</button>
+      </div>
       <h4>{{ movie.title }}</h4>
     </div>
-  </div>
+  
 
-  <!-- Buscador para añadir -->
-  <div class="add-movies">
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar películas..." (keyup.enter)="searchMovies()">
-    <button (click)="searchMovies()">🔍</button>
-  </div>
-
-  <div class="results" *ngIf="searchResults.length > 0">
-    <div class="result-card" *ngFor="let r of searchResults">
-      <img [src]="getPoster(r.poster_path)" [alt]="r.title">
-      <div>
-        <h5>{{ r.title }}</h5>
-        <button (click)="addToList(r.id)">➕ Añadir</button>
-      </div>
+   <!-- Botón para añadir películas -->
+    <div class="add-movie-card" (click)="searchMovies()">
+      <div class="add-icon">+</div>
+      <div class="add-text">Añadir película</div>
     </div>
   </div>
+  
+  <!-- Botón Editar ya lo tenés en la cabecera -->
+<div *ngIf="isEditing" class="modal-overlay">
+  <div class="modal">
+    <h2>Editar Lista</h2>
+    <form (ngSubmit)="updateList()" class="create-form">
+      <input type="text" [(ngModel)]="editList.name" name="name" placeholder="Nuevo nombre" required />
+      <textarea [(ngModel)]="editList.description" name="description" placeholder="Nueva descripción"></textarea>
+      <label>Lista pública
+        <input type="checkbox" [(ngModel)]="editList.isPublic" name="isPublic" />
+        
+      </label>
+      <div class="modal-actions">
+        <button type="submit">💾 Guardar</button>
+        <button type="button" (click)="closeEdit()">❌ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </div>

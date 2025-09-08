@@ -76,7 +76,8 @@
 .create-section h2 {
   font-family: 'Playfair Display', serif;
   color: #3f51b5;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 0;
 }
 
 .create-form {
@@ -87,7 +88,7 @@
 
 .create-form input,
 .create-form textarea {
-  padding: 0.6rem;
+  padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 0.95rem;
