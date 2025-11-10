@@ -6,3 +6,6 @@ ha loggeado (he conseguido acceder al usuario autenticado pero no
 guardo tanta información )
 - (OPCIONAL) Añadir un enlace en las peliculas que de acceso a enlaces con el guión de la pelicula
 - (OPCIONAL) Añadir en los detalles de las peliculas una lista de peliculas similares a esas peliculas concretas.
+- Poner USERNAME a los usuarios y gestioanr el tema de tener una imagen de usuario
+- Poner animaciones
+- Revisar sistemas de agregar amigos y ver si estoy de acuerdo

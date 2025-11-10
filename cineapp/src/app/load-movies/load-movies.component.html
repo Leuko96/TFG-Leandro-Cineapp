@@ -1,4 +1,49 @@
 <div>
       <button (click)="change_id()">🚀 Cargar Dataset en Firestore</button>
       <p>{{status}}</p>
+
+      <button (click)="meterID()">🆔 Agregar campo 'id' a todos los usuarios</button>
+      <p>{{idStatus}}</p>
+</div>
+
+<div class="admin-panel">
+  <h2>🛠️ Panel de Administración Firestore</h2>
+
+  <label>
+    Colección:
+    <input [(ngModel)]="coleccion" placeholder="Usuarios / Peliculas / etc">
+  </label>
+  <label>
+    ID Documento:
+    <input [(ngModel)]="docId" placeholder="(opcional para crear)">
+  </label>
+
+  <div class="actions">
+    <button (click)="verDocumento()">👁️ Ver documento</button>
+    <button (click)="listarColeccion()">📋 Listar colección</button>
+    <button (click)="eliminarDocumento()">🗑️ Eliminar documento</button>
+  </div>
+
+  <hr>
+
+  <h3>✏️ Actualizar campo</h3>
+  <label>Campo: <input [(ngModel)]="nuevoCampo" placeholder="nombreCampo"></label>
+  <label>Valor: <input [(ngModel)]="nuevoValor" placeholder="nuevo valor"></label>
+  <button (click)="actualizarCampo()">Actualizar</button>
+
+  <hr>
+
+  <h3>🆕 Crear documento</h3>
+  <textarea [(ngModel)]="nuevoDocumento" placeholder="{ 'nombre': 'Ejemplo', 'email': 'x@y.com' }"></textarea>
+  <button (click)="crearDocumento()">Crear nuevo documento</button>
+
+  <hr>
+  <div>
+  <h3>📩 Crear subcolección de notificaciones</h3>
+  <input [(ngModel)]="usuarioTarget" placeholder="ID del usuario" />
+  <button (click)="crearSubcoleccionNotificaciones(usuarioTarget)">Crear subcolección</button>
+</div>
+
+  <p>{{status}}</p>
+  <p>{{idStatus}}</p>
 </div>

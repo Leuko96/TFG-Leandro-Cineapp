@@ -15,6 +15,8 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';// Inicial
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideHttpClient } from '@angular/common/http';
+// import { getAI } from 'firebase/ai';
+
 // export const db = getFirestore(app);
 
 // const analytics = getAnalytics(app);

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Movie} from '../entities/movie';
 import { useDeviceLanguage } from '@angular/fire/auth';
+import { SentimentAnalysisServiceService } from '../services/sentiment-analysis-service.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -19,6 +20,7 @@ export class MovieDetailComponent implements OnInit{
   movie: any;
   reviews: any[] = [];
   newReview: string = "";
+  sentimentResult: any;
 
   id: number = 0;
   title: string = "";
@@ -41,7 +43,9 @@ export class MovieDetailComponent implements OnInit{
   backdrop_path: string = "";
   recommendations: string = "";
 
-  constructor(private route: ActivatedRoute, private router: Router, private firestore: Firestore, private auth: AuthService) {}
+  constructor(private route: ActivatedRoute, private router: Router, 
+              private firestore: Firestore, private auth: AuthService,
+              private sentimentService: SentimentAnalysisServiceService) {}
 
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('id')!;
@@ -121,7 +125,9 @@ export class MovieDetailComponent implements OnInit{
       alert("Debes iniciar sesión para dejar una review");
       return;
     }
-
+    // this.sentimentResult = await this.sentimentService.analyzeReview(this.newReview);
+    this.analyze();
+    console.log(this.sentimentResult);
     const reviewsRef = collection(this.firestore, "Reviews");
     await addDoc(reviewsRef, {
       movieId: this.movieId,
@@ -130,11 +136,25 @@ export class MovieDetailComponent implements OnInit{
       text: this.newReview,
       date: new Date()
     });
-
+    
     this.newReview = "";
     await this.loadReviews(); // recargar reviews
+    
   }
 
+  analyze(){
+    if (this.newReview.trim()) {
+      this.sentimentService.analyzeReview(this.newReview).subscribe({
+        next: (res) => {
+          this.sentimentResult = res;
+          console.log(res); // ejemplo: [{ "label": "POSITIVE", "score": 0.98 }]
+        },
+        error: (err) => {
+          console.error('Error al analizar la review', err);
+        }
+      });
+  }
+}
   goBack() {
     this.router.navigate(["/inicio"]);
   }

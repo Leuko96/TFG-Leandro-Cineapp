@@ -9,6 +9,7 @@ export interface Usuario {
   fecha_registro: Date;
   avatar?: string;
   entrenador: boolean;
+  amigos?: string[];
 }
 
 export class UsuarioImpl implements Usuario {
@@ -22,7 +23,8 @@ export class UsuarioImpl implements Usuario {
   administrador: boolean;
   entrenador: boolean;
   avatar?: string;
-
+  amigos?: string[];
+  
   constructor() {
     this.id = 0;
     this.nombre = '';

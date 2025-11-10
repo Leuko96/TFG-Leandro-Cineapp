@@ -3,7 +3,7 @@ import { Auth, provideAuth, createUserWithEmailAndPassword, signInWithEmailAndPa
 // import { doc, setDoc, getDoc, Firestore, addDoc } from "firebase/firestore";
 // import { getFirestore } from "firebase/firestore"
 import { BehaviorSubject } from 'rxjs';
-import { doc , Firestore, getDoc} from "@angular/fire/firestore"
+import { doc , Firestore, getDoc, setDoc} from "@angular/fire/firestore"
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,6 +21,15 @@ export class AuthService {
 
    async register(email: string, password: string) {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+
+    const user = userCredential.user;
+
+    await setDoc(doc(this.firestore, 'Usuarios', user.uid), {
+      nombre: email.split('@')[0], 
+      email: user.email,
+      Amigos: []
+    });
+
     return userCredential.user;
   }
 

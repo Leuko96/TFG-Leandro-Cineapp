@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router, RouterOutlet } from '@angular/router';
 import { UsuariosService } from '../services/usuarios.service';
 // import { doc, setDoc, getDoc, addDoc } from "firebase/firestore";
-import { Firestore,collection, addDoc, setDoc, doc} from "@angular/fire/firestore"
+import { Firestore,collection, addDoc, setDoc, doc, getDoc} from "@angular/fire/firestore"
 import { getFirestore } from "firebase/firestore";
 import { AuthService } from '../services/auth.service';
 import { Register } from '../entities/register'
@@ -26,7 +26,8 @@ export class RegisterComponent {
             
             const user = await this.auth.register(this.registerInfo.email,this.registerInfo.password);
             // const db = getFirestore();
-            
+
+
             await setDoc(doc(this.firestore,"Usuarios", user.uid),
               {
                 administrador: false,
@@ -35,9 +36,12 @@ export class RegisterComponent {
                 email: this.registerInfo.email,
                 fecha_registro: new Date(),
                 nombre: this.registerInfo.name,
-                password: this.registerInfo.password
+                password: this.registerInfo.password,
               }
             );
+            console.log("1. ID de usr.uid, 2. ID del documento");
+            console.log(user.uid);
+            console.log((await getDoc(doc(this.firestore,"Usuarios",user.uid))).id);
 
             this.router.navigate(['/inicio']);
           }catch(error: any){

@@ -1,0 +1,79 @@
+<div class="friends-layout">
+
+  <!-- IZQUIERDA: Lista de amigos -->
+  <div class="friends-section">
+    <h2>Mis Amigos</h2>
+    <div *ngIf="isLoading">
+      <p>Cargando amigos...</p>
+    </div>
+
+    <div *ngIf="!isLoading && listFriends.length === 0" class="no-friends">
+      <p>Aún no tienes amigos agregados 😅</p>
+    </div>
+
+    <div class="friend-card"  *ngFor="let friend of listFriends">
+      <div class="friend-info">
+        <h3>{{friend['nombre']}}</h3>
+        <p>{{friend['email']}}</p>
+      </div>
+        <div class="friend-actions">
+        <button (click)="openChat(friend['id'], friend['nombre'])" class="chat-btn">
+          💬 Chat
+        </button>
+        <button (click)="deleteFriend(friend['id'])" class="remove-btn">
+          Dejar de seguir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Chat -->
+<div class="chat-modal" *ngIf="activeChatFriendId">
+  <div class="chat-header">
+    <h3>Chat con {{ activeChatFriendName }}</h3>
+    <button class="close-chat" (click)="closeChat()">✖</button>
+  </div>
+
+  <div class="chat-messages">
+    <div *ngFor="let msg of chatMessages" [class.mine]="msg.senderId === usrUid " class="chat-message">
+      <span class="chat-text">{{ msg.text }}</span>
+      <small class="chat-date">{{ msg.date?.toDate() | date:'short' }}</small>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" placeholder="Escribí un mensaje..." [(ngModel)]="messageText" />
+    <button (click)="sendMessage()">Enviar</button>
+  </div>
+</div>
+
+  <!-- DERECHA: Buscar y agregar -->
+  <div class="add-section">
+    <h2>Buscar Usuarios</h2>
+
+    <form (ngSubmit)="searchUsers()" class="search-form">
+      <input
+        type="text"
+        placeholder="Buscar por nombre..."
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+      />
+      <button type="submit">🔍 Buscar</button>
+    </form>
+
+    <div *ngIf="searchResults.length > 0" class="resultados">
+      <h3>Resultados</h3>
+
+      <div class="friend-card" *ngFor="let user of searchResults">
+        <div class="friend-info">
+          <h3>{{ user['nombre'] }}</h3>
+          <p>{{ user['email'] }}</p>
+        </div>
+        <button (click)="agregarAmigo(user['id'])" class="add-btn">
+          ➕ Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

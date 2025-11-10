@@ -1,0 +1,262 @@
+/* Layout general */
+.friends-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+/* Sección de amigos */
+.friends-section {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.friends-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.no-friends {
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Tarjeta de amigo */
+.friend-card {
+  background: #3f236f;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.friend-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.friend-info h3 {
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.friend-info p {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+/* Sección derecha (buscar/agregar) */
+.add-section {
+  background: #fff;
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.add-section h2 {
+  font-family: 'Playfair Display', serif;
+  color: #3f51b5;
+  margin-bottom: 1.5rem;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-form input {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.search-form button {
+  padding: 0.6rem;
+  background: #3f51b5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background: #2c3e9f;
+}
+
+/* Botón de agregar */
+.add-btn {
+  background: #5e35b1;
+  border: none;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-btn:hover {
+  background: #4527a0;
+}
+
+.add-friend-btn {
+  padding: 0.4rem 0.8rem;
+  background: #3f51b5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-friend-btn:hover {
+  background: #2c3e9f;
+}
+
+/* Botón de borrar*/
+.remove-btn {
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.remove-btn:hover {
+  background-color: #e60000;
+}
+
+/* Chat Stuff */
+
+.friend-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-btn {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.chat-btn:hover {
+  background-color: #3e8e41;
+}
+
+/* Modal Chat */
+.chat-modal {
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 900px;
+  height: 80%;
+  background: rgba(30, 0, 50, 0.95);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  box-shadow: 0 0 20px rgba(0,0,0,0.7);
+  color: white;
+  overflow: hidden;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(60,0,90,0.8);
+}
+
+.close-chat {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-message {
+  max-width: 60%;
+  background: rgba(255,255,255,0.1);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+}
+
+.chat-message.mine {
+  align-self: flex-end;
+  background: rgba(100,200,255,0.3);
+}
+
+.chat-date {
+  font-size: 0.7rem;
+  color: #ccc;
+  margin-left: 5px;
+}
+
+.chat-input {
+  display: flex;
+  padding: 1rem;
+  gap: 0.5rem;
+  background: rgba(60,0,90,0.7);
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: none;
+}
+
+.chat-input button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.chat-input button:hover {
+  background: #3e8e41;
+}
