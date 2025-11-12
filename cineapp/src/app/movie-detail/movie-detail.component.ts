@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Movie} from '../entities/movie';
 import { useDeviceLanguage } from '@angular/fire/auth';
-import { SentimentAnalysisServiceService } from '../services/sentiment-analysis-service.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -44,8 +43,7 @@ export class MovieDetailComponent implements OnInit{
   recommendations: string = "";
 
   constructor(private route: ActivatedRoute, private router: Router, 
-              private firestore: Firestore, private auth: AuthService,
-              private sentimentService: SentimentAnalysisServiceService) {}
+              private firestore: Firestore, private auth: AuthService) {}
 
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('id')!;
@@ -143,17 +141,17 @@ export class MovieDetailComponent implements OnInit{
   }
 
   analyze(){
-    if (this.newReview.trim()) {
-      this.sentimentService.analyzeReview(this.newReview).subscribe({
-        next: (res) => {
-          this.sentimentResult = res;
-          console.log(res); // ejemplo: [{ "label": "POSITIVE", "score": 0.98 }]
-        },
-        error: (err) => {
-          console.error('Error al analizar la review', err);
-        }
-      });
-  }
+  //   if (this.newReview.trim()) {
+  //     this.sentimentService.analyzeReview(this.newReview).subscribe({
+  //       next: (res) => {
+  //         this.sentimentResult = res;
+  //         console.log(res); // ejemplo: [{ "label": "POSITIVE", "score": 0.98 }]
+  //       },
+  //       error: (err) => {
+  //         console.error('Error al analizar la review', err);
+  //       }
+  //     });
+  // }
 }
   goBack() {
     this.router.navigate(["/inicio"]);

@@ -58,6 +58,7 @@ export class SocialNetworkComponent {
       if(usr){
         const usrDoc = await getDoc(doc(this.firestore,"Usuarios",usr.uid));
         const usrData = usrDoc.data(); 
+        this.usrUid = usr.uid;
         if(usrData){
           this.notificationSerice.sendNotification(otroUid,notificationType.FriendRequest, "User " + usrData['nombre'] + " wants to be your friend", usr.uid );
           alert("Friend Request Sent")
@@ -101,13 +102,45 @@ export class SocialNetworkComponent {
     // Cargar mensajes desde Firestore usando tu estructura:
     // Usuarios/{usrId}/Chats/{friendId}/Messages
     // Suscribirse en tiempo real para que aparezcan automáticamente
-    this.chatMessages = await this.socialService.getMessages(this.auth.getCurrentUser()?.uid!, friendId);
+
+    // this.chatMessages = await this.socialService.getMessages(this.auth.getCurrentUser()?.uid!, friendId);
+    
+    if (!this.usrUid) return;
+    
+    try {
+      const msgs  = await this.socialService.getMessages(this.usrUid, friendId);
+      this.chatMessages = msgs || [];
+    } catch (e) {
+      // Si el servicio expone un listener/observable, suscríbete allí en su lugar.
+      console.error('Error loading messages:', e);
+      this.chatMessages = [];
+    }
   }
 
   async sendMessage() {
     if (!this.messageText.trim()) return;
-    await this.socialService.sendMessage(this.auth.getCurrentUser()?.uid!, this.activeChatFriendId!, this.messageText);
-    this.messageText = '';
+
+    // await this.socialService.sendMessage(this.auth.getCurrentUser()?.uid!, this.activeChatFriendId!, this.messageText);
+    // this.messageText = '';
+
+    if (!this.usrUid || !this.activeChatFriendId) return;
+    try {
+      await this.socialService.sendMessage(this.usrUid, this.activeChatFriendId, this.messageText);
+      
+      // añadir localmente para ver el mensaje inmediatamente (la persistencia la hace Firestore)
+      this.chatMessages.push({
+        senderId: this.usrUid,
+        text: this.messageText,
+        // fecha local; Firestore puede añadir serverTimestamp al guardar
+        date: new Date()
+      });
+      
+      this.messageText = '';
+      // opcional: hacer scroll al final del contenedor de mensajes si lo necesitas
+    } catch (err) {
+      console.error('Error enviando mensaje:', err);
+      alert('No se pudo enviar el mensaje. Revisa la consola.');
+    }
   }
 }
 

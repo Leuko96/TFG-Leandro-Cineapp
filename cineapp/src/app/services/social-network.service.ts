@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, getDocs, getDoc, doc, updateDoc, deleteDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, getDoc, doc, updateDoc, deleteDoc, query, where, orderBy } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { UsuariosService } from './usuarios.service';
 import { Usuario, UsuarioImpl } from '../entities/usuario';
@@ -154,7 +154,7 @@ export class SocialNetworkService {
 
   public async searchUsersByName(name: string): Promise<DocumentData[]> {
     const usersRef = collection(this.firestore, 'Usuarios');
-    const q = query(usersRef, where('nombre', '>=', name), where('nombre', '<=', name + '\uf8ff'));
+    const q = query(usersRef, where('nombre', '>=', name), where('nombre', '<=', name + '\uf8ff'), where('nombre', '!=',this.currentUser?.['nombre']??''));
 
     const querySnapshot = await getDocs(q);
     const results: DocumentData[] = [];
@@ -166,11 +166,34 @@ export class SocialNetworkService {
     return results;
   }
 
-  async getMessages(a:string, b:string):Promise<any>{
-
+  private chatIdFor(u1: string, u2: string): string {
+    if (!u1 || !u2) throw new Error('UIDs inválidos para generar chatId');
+    return [u1, u2].sort().join('_');
   }
-  async sendMessage(a:string, b:string, c:string){
+  async getMessages(a:string, b:string):Promise<any[]>{
+    if (!a || !b) return [];
+    const chatId = this.chatIdFor(a, b);
+    const messagesCol = collection(this.firestore, `Chats/${chatId}/Messages`);
+    // consulta ordenada por createdAt asc
+    const q = query(messagesCol, orderBy('createdAt', 'asc'));
+    const snap = await getDocs(q);
+    const msgs: any[] = [];
+    snap.forEach(docSnap => {
+      msgs.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    return msgs;
+  }
 
+  async sendMessage(usrId:string, chatFriendId:string, textMessage:string){
+    if (!a || !b) throw new Error('UIDs inválidos para enviar mensaje');
+    const chatId = this.chatIdFor(usrId, );
+    const messagesCol = collection(this.firestore, `Usuarios/${usrId}/Chats/${chatId}/Messages`);
+    // añade documento
+    return addDoc(messagesCol, {
+      senderId: a,
+      text: c,
+      createdAt: serverTimestamp()
+    });
   }
 
 }
