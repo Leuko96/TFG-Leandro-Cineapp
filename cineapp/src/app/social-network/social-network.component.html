@@ -17,7 +17,7 @@
         <p>{{friend['email']}}</p>
       </div>
         <div class="friend-actions">
-        <button (click)="openChat(friend['id'], friend['nombre'])" class="chat-btn">
+        <button (click)="openChat(friend['id'], friend['nombre'], friend['avatar'], friend['isOnline'])" class="chat-btn">
           💬 Chat
         </button>
         <button (click)="deleteFriend(friend['id'])" class="remove-btn">
@@ -30,19 +30,33 @@
   <!-- Modal Chat -->
 <div class="chat-modal" *ngIf="activeChatFriendId">
   <div class="chat-header">
-    <h3>Chat con {{ activeChatFriendName }}</h3>
+    <div class="chat-header-info">
+      <img *ngIf="activeChatFriendAvatar" [src]="activeChatFriendAvatar" alt="avatar" class="chat-avatar" />
+      <div class="chat-header-text">
+        <h3>{{ activeChatFriendName }}</h3>
+        <span class="online-status" [class.online]="activeChatFriendOnline" [class.offline]="!activeChatFriendOnline" *ngIf="!activeChatFriendTyping">
+          {{ activeChatFriendOnline ? '● En línea' : '● Desconectado' }}
+        </span>
+        <span class="typing-indicator" *ngIf="activeChatFriendTyping">Escribiendo...</span>
+      </div>
+    </div>
     <button class="close-chat" (click)="closeChat()">✖</button>
   </div>
 
   <div class="chat-messages">
     <div *ngFor="let msg of chatMessages" [class.mine]="msg.senderId === usrUid " class="chat-message">
       <span class="chat-text">{{ msg.text }}</span>
-      <small class="chat-date">{{ msg.date?.toDate() | date:'short' }}</small>
+      <div class="chat-footer">
+        <small class="chat-date">{{ msg.createdAt | date:'short' }}</small>
+        <span *ngIf="msg.senderId === usrUid" class="chat-tick" [class.read]="msg.read">
+          {{ msg.read ? '✓✓' : '✓' }}
+        </span>
+      </div>
     </div>
   </div>
 
   <div class="chat-input">
-    <input type="text" placeholder="Escribí un mensaje..." [(ngModel)]="messageText" />
+    <input type="text" placeholder="Escribí un mensaje..." [(ngModel)]="messageText" (input)="onTyping()" />
     <button (click)="sendMessage()">Enviar</button>
   </div>
 </div>

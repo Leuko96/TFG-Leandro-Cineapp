@@ -9,7 +9,7 @@ import { UserListsComponent } from './user-lists/user-lists.component';
 import { ListDetailComponent } from './list-detail/list-detail.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SocialNetworkComponent } from './social-network/social-network.component';
-import { FriendsChatComponent } from './friends-chat/friends-chat.component';
+
 
 export const routes: Routes = [
     {path: "inicio", component: InicioComponent},
@@ -21,7 +21,6 @@ export const routes: Routes = [
     {path: "list-detail/:id", component: ListDetailComponent},
     {path: "settings", component: SettingsComponent},
     {path: "socialNetwork", component: SocialNetworkComponent},
-    {path: "friend-chat/", component: FriendsChatComponent},
     {path: "search-films", component: SearchFilmsComponent, data: { animation: 'SearchPage' }},
     
     

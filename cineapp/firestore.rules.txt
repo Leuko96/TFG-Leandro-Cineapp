@@ -1,0 +1,186 @@
+// ============================================================
+// REGLAS DE SEGURIDAD FIRESTORE - CineApp
+// ============================================================
+// Copia todo el contenido de este archivo (sin estos comentarios)
+// a Firebase Console: Firestore Database → Pestaña "Reglas" → Publicar
+// ============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================================
+    // FUNCIÓN AUXILIAR: Verificar que el usuario está autenticado
+    // ============================================================
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // ============================================================
+    // COLECCIÓN: Usuarios
+    // ============================================================
+    // Reglas para perfiles de usuario
+    match /Usuarios/{userId} {
+      // Leer: cada usuario puede leer su propio perfil y cualquier perfil público
+      allow read: if isAuthenticated() && 
+                     (request.auth.uid == userId || 
+                      resource.data.get('privado', false) == false);
+      
+      // Escribir: solo el usuario puede escribir en su propio documento
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+
+      // Subcolección: Notificaciones
+      match /Notificaciones/{notifId} {
+        // Solo el usuario puede leer sus propias notificaciones
+        allow read: if isAuthenticated() && request.auth.uid == userId;
+        
+        // Solo el usuario puede escribir en sus notificaciones
+        allow write: if isAuthenticated() && request.auth.uid == userId;
+      }
+
+      // Subcolección: Chats (punteros/metadatos opcionales)
+      match /Chats/{chatId} {
+        // Leer: solo si el usuario está en los participantes del chat (verificar en Chats/{chatId})
+        allow read: if isAuthenticated() && request.auth.uid == userId;
+        
+        // Escribir: solo el usuario puede actualizar sus chats
+        allow write: if isAuthenticated() && request.auth.uid == userId;
+      }
+    }
+
+    // ============================================================
+    // COLECCIÓN: Chats (PRINCIPAL - Mensajes y metadatos)
+    // ============================================================
+    // Estructura: Chats/{chatId}/Messages/{messageId}
+    // donde chatId = sort([uid1, uid2]).join('_')
+    match /Chats/{chatId} {
+      // Función: verificar si el usuario actual es participante del chat
+      function isParticipant() {
+        return isAuthenticated() && 
+               request.auth.uid in resource.data.participants;
+      }
+
+      // Leer documento del chat: solo participantes
+      allow read: if isAuthenticated() && 
+                     isParticipant();
+
+      // Crear chat: ambos usuarios deben estar autenticados y en participants
+      allow create: if isAuthenticated() && 
+                       request.auth.uid in request.resource.data.participants &&
+                       request.resource.data.participants.size() == 2 &&
+                       request.resource.data.get('participants', []).hasAny([request.auth.uid]);
+
+      // Actualizar chat: solo participantes pueden actualizar metadatos
+      allow update: if isAuthenticated() && 
+                       isParticipant() &&
+                       // Permitir actualizar lastMessage, updatedAt, unReadCounts
+                       (request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['lastMessage', 'updatedAt', 'unReadCounts']));
+
+      // Eliminar: no permitir (comentado para evitar borrados accidentales)
+      allow delete: if false;
+
+      // ============================================================
+      // SUBCOLECCIÓN: Chats/{chatId}/Messages (MENSAJES)
+      // ============================================================
+      match /Messages/{messageId} {
+        // Leer mensajes: solo participantes del chat
+        allow read: if isAuthenticated() && 
+                       request.auth.uid in get(/databases/$(database)/documents/Chats/$(chatId)).data.participants;
+
+        // Crear mensaje: 
+        // - Usuario autenticado
+        // - senderId debe ser el usuario actual
+        // - Usuario debe estar en participants del chat
+        allow create: if isAuthenticated() && 
+                        request.auth.uid == request.resource.data.senderId &&
+                        request.auth.uid in get(/databases/$(database)/documents/Chats/$(chatId)).data.participants &&
+                        request.resource.data.get('text', '').size() > 0; // Validar que text no esté vacío
+
+        // Actualizar: solo permitir si es el mismo usuario y solo puede editar 'edited'
+        allow update: if isAuthenticated() && 
+                        request.auth.uid == resource.data.senderId &&
+                        request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['edited', 'delivered']);
+
+        // Eliminar: no permitir (comentado)
+        allow delete: if false;
+      }
+    }
+
+    // ============================================================
+    // COLECCIÓN: Notificaciones (global, opcional si la necesitas)
+    // ============================================================
+    match /Notificaciones/{notifId} {
+      // Leer: solo el usuario receptor
+      allow read: if isAuthenticated() && 
+                     request.auth.uid == resource.data.get('receiverId');
+      
+      // Crear: cualquier usuario autenticado (para enviar notificaciones)
+      allow create: if isAuthenticated();
+      
+      // Actualizar: solo el receptor
+      allow update: if isAuthenticated() && 
+                       request.auth.uid == resource.data.get('receiverId');
+      
+      // Eliminar: solo el receptor
+      allow delete: if isAuthenticated() && 
+                       request.auth.uid == resource.data.get('receiverId');
+    }
+
+    // ============================================================
+    // COLECCIÓN: Movies (si la tienes)
+    // ============================================================
+    match /Movies/{movieId} {
+      // Leer: cualquier usuario autenticado
+      allow read: if isAuthenticated();
+      
+      // Escribir: solo administradores (comentado; ajusta según necesidad)
+      allow write: if false; // Descomenta si tienes rol de admin
+    }
+
+    // ============================================================
+    // COLECCIÓN: Reviews (si la tienes)
+    // ============================================================
+    match /Reviews/{reviewId} {
+      // Leer: cualquier usuario autenticado
+      allow read: if isAuthenticated();
+      
+      // Crear: usuario autenticado puede crear su propia review
+      allow create: if isAuthenticated() && 
+                       request.auth.uid == request.resource.data.get('userId');
+      
+      // Actualizar: solo el autor de la review
+      allow update: if isAuthenticated() && 
+                       request.auth.uid == resource.data.get('userId');
+      
+      // Eliminar: solo el autor
+      allow delete: if isAuthenticated() && 
+                       request.auth.uid == resource.data.get('userId');
+    }
+
+    // ============================================================
+    // CATCH-ALL: Denegar por defecto (SEGURIDAD MÁS ESTRICTA)
+    // ============================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+  }
+}
+
+// ============================================================
+// NOTAS DE IMPLEMENTACIÓN
+// ============================================================
+// 1. Reemplaza todo el contenido anterior (si lo hay) en Firebase Console
+// 2. Prueba las reglas en "Simulador de Reglas" en Firebase Console
+// 3. Si tienes usuarios existentes, asegúrate de que tienen:
+//    - Campo 'privado' (boolean) en Usuarios (opcional)
+//    - Campo 'participants' (array de strings) en Chats
+//    - Campo 'senderId' (string) en Messages
+// 4. Para desarrollo/pruebas: temporalmente cambia a:
+//    match /{document=**} {
+//      allow read, write: if request.auth != null;
+//    }
+//    Pero recuerda cambiar a reglas estrictas antes de producción
+// 5. Índices: Firestore creará automáticamente índices según sea necesario

@@ -10,6 +10,7 @@ export interface Usuario {
   avatar?: string;
   entrenador: boolean;
   amigos?: string[];
+  isOnline?: boolean;
 }
 
 export class UsuarioImpl implements Usuario {
@@ -24,6 +25,7 @@ export class UsuarioImpl implements Usuario {
   entrenador: boolean;
   avatar?: string;
   amigos?: string[];
+  isOnline?: boolean;
   
   constructor() {
     this.id = 0;

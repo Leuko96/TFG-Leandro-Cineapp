@@ -9,3 +9,4 @@ guardo tanta información )
 - Poner USERNAME a los usuarios y gestioanr el tema de tener una imagen de usuario
 - Poner animaciones
 - Revisar sistemas de agregar amigos y ver si estoy de acuerdo
+- Posibiliidad de crear grupos de chats
