@@ -1,45 +1,99 @@
-<div class="settings-container">
-  <h2>⚙️ Ajustes</h2>
+<div class="settings-shell">
 
-  <!-- Sección Perfil -->
-  <section class="settings-section">
-    <h3>👤 Perfil</h3>
-    <form (ngSubmit)="saveProfile()" class="form-section">
-      <input type="text" placeholder="Nombre" [(ngModel)]="profile.nombre" name="nombre" />
-      <input type="text" placeholder="Primer apellido" [(ngModel)]="profile.apellido1" name="apellido1" />
-      <input type="text" placeholder="Segundo apellido" [(ngModel)]="profile.apellido2" name="apellido2" />
-      <input type="text" placeholder="Película favorita" [(ngModel)]="profile.favouriteFilm" name="favouriteFilm" />
-      <input type="text" placeholder="URL de foto de perfil" [(ngModel)]="profile.photoUrl" name="photoUrl" />
-      <button type="submit">💾 Guardar Perfil</button>
-    </form>
-  </section>
+  <section class="profile-settings card-surface">
+    <div class="profile-settings__header">
+      <h3>Profile settings</h3>
+    </div>
 
-  <!-- Sección Preferencias -->
-  <section class="settings-section">
-    <h3>🎨 Preferencias</h3>
-    <form (ngSubmit)="savePreferences()" class="form-section">
-      <label>
-        <input type="checkbox" [(ngModel)]="preferences.darkMode" name="darkMode" />
-        Modo oscuro
+    <div *ngIf="profileLoading" class="profile-settings__state">
+      Cargando datos de perfil...
+    </div>
+
+    <form *ngIf="!profileLoading" class="profile-form" (ngSubmit)="saveProfileSettings()">
+      <div class="profile-header">
+        <div class="profile-avatar-preview">
+          <img
+            [src]="profilePhotoPreview"
+            alt="Previsualización del avatar"
+            (error)="selectedImagePreview = ''; profilePhotoUrl = ''"
+          />
+        </div>
+        
+        <div class="account-meta">
+            <span class="account-label">Cuenta activa</span>
+            <strong class="account-value">{{ userEmail }}</strong>
+        </div>
+      </div>
+      <label id="field-label-image" for="profilePhotoFile">Seleccionar imagen
+        <input
+          id="profilePhotoFile"
+          type="file"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
       </label>
+      <label class="field-label" for="profileDisplayName">Nombre</label>
+      <input
+        id="profileDisplayName"
+        type="text"
+        [(ngModel)]="profileDisplayName"
+        name="profileDisplayName"
+        placeholder="Ejemplo: Leandro"
+        minlength="2"
+        required
+      />
+       
 
-      <label>
-        Idioma:
-        <select [(ngModel)]="preferences.language" name="language">
-          <option value="es">Español</option>
-          <option value="en">Inglés</option>
-          <option value="fr">Francés</option>
-        </select>
-      </label>
-
-      <button type="submit">💾 Guardar Preferencias</button>
+      <div class="profile-form__actions">
+        <button class="btn btn-secondary" type="submit" [disabled]="profileSaving || isWorking">
+          {{ profileSaving ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
     </form>
+
+    <p *ngIf="profileMessage" class="profile-message">{{ profileMessage }}</p>
+    <p *ngIf="profileErrorMessage" class="profile-error">{{ profileErrorMessage }}</p>
   </section>
 
-  <!-- Sección Cuenta -->
-  <section class="settings-section danger-zone">
-    <h3>🚨 Cuenta</h3>
-    <button (click)="logout()">🔓 Cerrar Sesión</button>
-    <button class="delete" (click)="deleteAccount()">🗑️ Eliminar Cuenta</button>
+  <section class="account-card card-surface">
+
+    <div class="account-actions">
+      <button class="btn btn-secondary" (click)="logout()" [disabled]="isWorking">
+        {{ isWorking ? 'Procesando...' : 'Cerrar sesión' }}
+      </button>
+      <button class="btn btn-danger" (click)="openDeleteModal()" [disabled]="isWorking">
+        Eliminar cuenta
+      </button>
+    </div>
+
+    <p class="action-note">
+      El borrado de cuenta es permanente y no se puede deshacer.
+    </p>
   </section>
+
+  <div *ngIf="errorMessage" class="settings-error card-surface">
+    {{ errorMessage }}
+  </div>
+</div>
+
+<div class="confirm-overlay" *ngIf="showDeleteConfirm">
+  <div class="confirm-modal card-surface">
+    <h3>Confirmar eliminación</h3>
+    <p>
+      Esta acción borrará tu cuenta. Escribe <strong>ELIMINAR</strong> para continuar.
+    </p>
+
+    <input
+      type="text"
+      [(ngModel)]="deletePhrase"
+      name="deletePhrase"
+      placeholder="Escribe ELIMINAR"
+      autocomplete="off"
+    />
+
+    <div class="confirm-actions">
+      <button class="btn btn-secondary" (click)="closeDeleteModal()" [disabled]="isWorking">Cancelar</button>
+      <button class="btn btn-danger" (click)="deleteAccount()" [disabled]="isWorking">Confirmar borrado</button>
+    </div>
+  </div>
 </div>

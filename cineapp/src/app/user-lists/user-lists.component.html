@@ -2,17 +2,17 @@
 
   <!-- IZQUIERDA: Listas del usuario -->
   <div class="lists-section">
-    <!-- <h2>Mis Listas</h2> -->
+    <h2>{{ isOwnLists ? 'Mis Listas' : ('Listas compartidas de ' + viewedUserName) }}</h2>
 
     <div *ngIf="lists.length === 0" class="no-lists">
-      <p>Aún no has creado ninguna lista 🎬</p>
+      <p *ngIf="isOwnLists">Aún no has creado ninguna lista 🎬</p>
+      <p *ngIf="!isOwnLists">Este usuario todavía no tiene listas visibles 🎬</p>
     </div>
-
     <div class="list-card" *ngFor="let list of lists">
       <div class="list-info"  (click)="cambiarRuta(list.id)" >
         <h3>{{ list.name }}</h3>
         <p>{{ list.description }}</p>
-      </div>
+      </div> 
       <div class="list-meta">
         <span>{{ list.movieIds.length }} películas</span>
         <small>{{ list.isPublic ? '🌍 Pública' : '🔒 Privada' }}</small>
@@ -21,16 +21,19 @@
   </div>
 
   <!-- DERECHA: Crear nueva lista -->
-  <div class="create-section">
+  <div class="create-section" *ngIf="isOwnLists">
     <h2>Crear Lista</h2>
     <form (ngSubmit)="createList()" class="create-form">
+
       <input type="text" placeholder="Nombre de la lista" [(ngModel)]="newList.name" name="name" required />
       <textarea placeholder="Descripción" [(ngModel)]="newList.description" name="description"></textarea>
-      <label>
-        <input type="checkbox" [(ngModel)]="newList.isPublic" name="isPublic" />
+      
+      <label class="checkbox-row">
         Lista pública
+        <input type="checkbox" [(ngModel)]="newList.isPublic" name="isPublic" /> 
       </label>
-      <button type="submit">➕ Crear</button>
+
+      <button type="submit">➕ </button>
     </form>
   </div>
 

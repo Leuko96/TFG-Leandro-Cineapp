@@ -12,9 +12,16 @@
     </div>
 
     <div class="friend-card"  *ngFor="let friend of listFriends">
-      <div class="friend-info">
-        <h3>{{friend['nombre']}}</h3>
-        <p>{{friend['email']}}</p>
+      <div class="friend-user">  
+        <img 
+        [src]="friend['avatar'] || 'assets/avatar-default.jpeg'" 
+        alt="Avatar de {{friend['nombre']}}"
+        class="friend-avatar"
+        >
+        <div class="friend-info">
+          <h3>{{friend['nombre']}}</h3>
+          <p>{{friend['email']}}</p>
+        </div>
       </div>
         <div class="friend-actions">
         <button (click)="openChat(friend['id'], friend['nombre'], friend['avatar'], friend['isOnline'])" class="chat-btn">
@@ -22,6 +29,9 @@
         </button>
         <button (click)="deleteFriend(friend['id'])" class="remove-btn">
           Dejar de seguir
+        </button>
+        <button type="button" class="shared-lists-btn" [routerLink]="['/mylists', friend['id']]">
+          Listas compartidas
         </button>
       </div>
     </div>
@@ -43,7 +53,7 @@
     <button class="close-chat" (click)="closeChat()">✖</button>
   </div>
 
-  <div class="chat-messages">
+  <div class="chat-messages" #chatMessagesContainer>
     <div *ngFor="let msg of chatMessages" [class.mine]="msg.senderId === usrUid " class="chat-message">
       <span class="chat-text">{{ msg.text }}</span>
       <div class="chat-footer">

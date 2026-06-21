@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Movie } from '../entities/movie';
 import { ListsService } from '../services/lists.service';
-import { Firestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion } from '@angular/fire/firestore';
+import { addDoc, Firestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion, orderBy, limit } from '@angular/fire/firestore';
 import { AuthService } from '../services/auth.service';
-import { arrayRemove } from 'firebase/firestore';
 import { Location } from '@angular/common';
+import { ActionType } from '../entities/actions';
+import { user } from 'firebase-functions/v1/auth';
 @Component({
   selector: 'app-search-films',
   standalone: true,
@@ -23,10 +23,84 @@ export class SearchFilmsComponent {
   titulo: string = "";
   results: any[]=[];
   successMessage: string = "";
+  // UI-ready list for the "Ultimas busquedas" panel.
+  // You can populate this from Actions collection with the latest 5 items.
+  recentSearches: Array<{ id: string; title: string; poster_path?: string; searchedAt?: Date }> = [];
   
   constructor(private firestore: Firestore, private router: Router, private listservice: ListsService, 
     private auth: AuthService, private loc:Location) {}
 
+  get showRecentSearchesPanel(): boolean {
+    return !this.titulo.trim() && this.results.length === 0 && this.recentSearches.length > 0;
+  }
+  
+  ngOnInit() {
+      this.loadRecentSearches();
+  }
+
+  async loadRecentSearches(){
+    const userId = this.auth.getCurrentUser()?.uid;
+    if(!userId) {
+      this.recentSearches = [];
+      return;
+    }
+
+    const colRef = collection(this.firestore, "Actions");
+    const q = query(
+      colRef,
+      where("userId", "==", userId),
+      where("type", "==", ActionType.Search),
+      orderBy("createdAt", "desc"),
+      limit(30)
+    );
+
+    const snap = await getDocs(q);
+    const mapped = snap.docs
+      .map(docSnap => {
+        const data: any = docSnap.data();
+        const titleFromMessage = (data['extraMessage'] ?? '').toString().replace('Has buscado esta película recientemente: ', '').trim();
+        return {
+          id: data['movieId'],
+          title: titleFromMessage || 'Pelicula',
+          poster_path: data['poster_path'],
+          searchedAt: data['createdAt']?.toDate?.()
+        };
+      })
+      .filter(item => !!item.id);
+
+    const uniqueByMovie = new Map<string, typeof mapped[number]>();
+    for (const item of mapped) {
+      if (!uniqueByMovie.has(item.id)) {
+        uniqueByMovie.set(item.id, item);
+      }
+    }
+
+    const topRecent = Array.from(uniqueByMovie.values()).slice(0, 5);
+
+    const completedRecent = await Promise.all(
+      topRecent.map(async (item) => {
+        if (item.poster_path) {
+          return item;
+        }
+
+        const peliculasRef = collection(this.firestore, "Peliculas");
+        const movieQuery = query(peliculasRef, where("id", "==", item.id), limit(1));
+        const movieSnap = await getDocs(movieQuery);
+        if (movieSnap.empty) {
+          return item;
+        }
+
+        const movieData: any = movieSnap.docs[0].data();
+        return {
+          ...item,
+          title: item.title || movieData['title'] || 'Pelicula',
+          poster_path: movieData['poster_path'] || item.poster_path
+        };
+      })
+    );
+
+    this.recentSearches = completedRecent;
+  }
   async search(){
 
     if (!this.titulo.trim()) {
@@ -34,40 +108,19 @@ export class SearchFilmsComponent {
       return;
     }
 
-    const docref = collection(this.firestore,"Peliculas");
-    const arr = this.separateTitle(this.titulo);
-    console.log(arr);
-    const q = query(docref, where("title", ">=", this.titulo),
-    where("title", "<=", this.titulo + '\uf8ff'));
-    
-    const querySnapshot = await getDocs(q);
+    const searchTerm = this.titulo.trim().toLowerCase();
+    const docref = collection(this.firestore, "Peliculas");
+    const querySnapshot = await getDocs(docref);
 
-    this.results = querySnapshot.docs.map(doc => ({
-      id: doc.id,        // guardamos el id del doc
-      ...doc.data()      // "spread": todos los campos del documento
-    }));
-    // this.results = querySnapshot.docs.map(doc => ({
-    //     id: doc.id,
-    //     title: doc.title,
-    //     genres: doc.genres,
-    //     original_language: row.original_language, // URL o path a la imagen
-    //     overview: row.overview, // Imagen de fondo
-    //     popularity: row.popularity,
-    //     production_companies: row.production_companies,
-    //     release_date: row.release_date,
-    //     budget: row.budget,
-    //     revenue: row.revenue,
-    //     runtime: row.runtime,
-    //     status: row.status,
-    //     tagline: row.tagline,
-    //     vote_average: row.vote_average,
-    //     vote_count: row.vote_count,
-    //     credits: row.credits,
-    //     keywords: row.keywords,
-    //     poster_path:row.poster_path,
-    //     backdrop_path: row.backdrop_path,
-    //     recommendations: row.recommendations
-    // }));
+    this.results = querySnapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      .filter((movie: any) => {
+        const title = (movie.title ?? '').toString().toLowerCase();
+        return title.includes(searchTerm);
+      });
 
   }
 
@@ -92,7 +145,45 @@ export class SearchFilmsComponent {
     if (!posterPath) return '/assets/placeholder-poster.jpg';
     return `${this.TMDB_BASE}${size}${posterPath}`;
   }
-  goToDetail(id: string) {
+  async goToDetail(id: string) {
+    if(id!=null){
+      const userId = this.auth.getCurrentUser()?.uid ?? 'unknown';
+      const collectionRefPeliculas = collection(this.firestore, "Peliculas");
+      const q = query(collectionRefPeliculas, where("id", "==", id));
+      const querySnapshot = await getDocs(q);
+      const movieData: any = querySnapshot.docs.length > 0 ? querySnapshot.docs[0].data() : null;
+      this.titulo = movieData?.['title'] ?? 'Unknown';
+      const posterPath = movieData?.['poster_path'] ?? null;
+
+      const collectionRefActions = collection(this.firestore, "Actions");
+      const existingActionQuery = query(
+        collectionRefActions,
+        where("userId", "==", userId),
+        where("type", "==", ActionType.Search),
+        where("movieId", "==", id),
+        limit(1)
+      );
+
+      const existingActionDocs = await getDocs(existingActionQuery);
+      if (existingActionDocs.empty) {
+        await addDoc(collectionRefActions,{
+          type: ActionType.Search,
+          createdAt: new Date(),
+          extraMessage: `Has buscado esta película recientemente: ${this.titulo}`,
+          movieId: id,
+          poster_path: posterPath,
+          userId
+        });
+      } else {
+        await updateDoc(existingActionDocs.docs[0].ref, {
+          createdAt: new Date(),
+          extraMessage: `Has buscado esta película recientemente: ${this.titulo}`,
+          poster_path: posterPath
+        });
+      }
+
+      await this.loadRecentSearches();
+    }
     this.router.navigate(['/movie', id]);
   }
 
@@ -120,12 +211,21 @@ export class SearchFilmsComponent {
   async addMovieToList(movieId: string, listId: string) {
     console.log(`Añadiendo película ${movieId} a lista ${listId}`);
 
-    const docRef = doc(this.firestore,"Lists",listId);
-    const updateList = await updateDoc(docRef,
+    const docRefList = doc(this.firestore,"Lists",listId);
+    const docRefAction = collection(this.firestore, "Actions");
+    const updateList = await updateDoc(docRefList,
       {
         "movieIds": arrayUnion(movieId)
       }
     );
+    await addDoc(docRefAction, {
+      type: ActionType.AddToList,
+      userId: this.auth.getCurrentUser()?.uid ?? 'unknown',
+      movieId: movieId,
+      extraInfo: `Has añadido ${this.selectedMovie?.title ?? 'la película'} a la lista ${this.userLists.find(l => l.id === listId)?.name ?? 'desconocida'}`,
+      createdAt: new Date(),
+    });
+
     this.successMessage = "✅ Successfully updated list :)";
     setTimeout(() => {
       this.successMessage = "";

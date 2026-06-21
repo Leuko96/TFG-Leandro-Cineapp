@@ -9,7 +9,7 @@ import { UserListsComponent } from './user-lists/user-lists.component';
 import { ListDetailComponent } from './list-detail/list-detail.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SocialNetworkComponent } from './social-network/social-network.component';
-
+import { AiAssistantComponent } from './ai-assistant/ai-assistant.component';
 
 export const routes: Routes = [
     {path: "inicio", component: InicioComponent},
@@ -18,9 +18,11 @@ export const routes: Routes = [
     {path: "load-movies", component: LoadMoviesComponent},
     {path: "movie/:id", component: MovieDetailComponent },
     {path: "mylists", component: UserListsComponent},
+    {path: "mylists/:uid", component: UserListsComponent},
     {path: "list-detail/:id", component: ListDetailComponent},
     {path: "settings", component: SettingsComponent},
     {path: "socialNetwork", component: SocialNetworkComponent},
+    {path: "ai-assistant", component: AiAssistantComponent},
     {path: "search-films", component: SearchFilmsComponent, data: { animation: 'SearchPage' }},
     
     

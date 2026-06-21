@@ -38,6 +38,21 @@ export class ListsService {
     })) as List[];
   }
 
+  // Obtener solo listas publicas de un usuario
+  async getPublicUserLists(userId: string): Promise<List[]> {
+    const q = query(
+      this.getCollection(),
+      where('userId', '==', userId),
+      where('isPublic', '==', true)
+    );
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(d => ({
+      id: d.id,
+      ...d.data()
+    })) as List[];
+  }
+
   // Actualizar lista
   async updateList(listId: string, data: Partial<List>): Promise<void> {
     const ref = doc(this.firestore, 'Lists', listId);

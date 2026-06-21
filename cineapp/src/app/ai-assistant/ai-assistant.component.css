@@ -1,0 +1,262 @@
+.page {
+  padding: 32px 28px 64px;
+  background: transparent;
+  color: var(--text);
+  min-height: calc(100vh - 40px);
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #a855f7;
+  margin: 0 0 8px 0;
+}
+
+.hero h1 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.lede {
+  margin: 0;
+  color: #cbd5e1;
+  max-width: 720px;
+}
+
+.pill {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #f0abfc;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.selectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.selector-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.selector-card input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(2, 6, 23, 0.45);
+  color: var(--text);
+  outline: none;
+}
+
+.selector-card input:focus {
+  border-color: rgba(192, 132, 252, 0.7);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.18);
+}
+
+.results {
+  list-style: none;
+  margin: 8px 0 0 0;
+  padding: 0;
+  background: rgba(2, 6, 23, 0.35);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.results li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.results li:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.results img {
+  width: 48px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.chips {
+  margin-top: 10px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.06);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.chip img {
+  width: 48px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.primary {
+  background: linear-gradient(120deg, var(--accent), #6366f1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(99,102,241,0.4);
+}
+
+.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: white;
+  animation: spin 0.9s linear infinite;
+}
+
+.hint {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.alert {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fecdd3;
+  padding: 10px 12px;
+  border-radius: 10px;
+  max-width: 600px;
+}
+
+.recommendations header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.recommendations header p {
+  margin: 4px 0 14px 0;
+  color: #cbd5e1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, #a855f7, #22d3ee);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.7);
+}
+
+.reason {
+  color: #e5e7eb;
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: rgba(255,255,255,0.08);
+  color: #e0f2fe;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -99,14 +99,7 @@ export class SocialNetworkService {
 
 }
 
-  
-    // if(amigosUID){
-    //   for(let i = 0; i < amigosUID.length; i++){
-    //     const friendDoc =  await getDoc(doc(this.firestore,"Usuarios",amigosUID[i]));
-    //     listFriends.push(friendDoc.data()!);
-    //   }
-      
-    // }
+
   }
 
 
@@ -207,15 +200,26 @@ export class SocialNetworkService {
     }
   }
 
-  public async searchUsersByName(name: string): Promise<DocumentData[]> {
+  public async searchUsersByName(name: string, listFriends: DocumentData[]): Promise<DocumentData[]> {
     const usersRef = collection(this.firestore, 'Usuarios');
-    const q = query(usersRef, where('nombre', '>=', name), where('nombre', '<=', name + '\uf8ff'), where('nombre', '!=',this.currentUser?.['nombre']??''));
+    const q = query(usersRef,where('nombre', '>=', name), where('nombre', '<=', name + '\uf8ff'), where('nombre', '!=',this.currentUser?.['nombre']??''));
 
     const querySnapshot = await getDocs(q);
     const results: DocumentData[] = [];
+    const excludedIds = new Set<string>(
+      listFriends
+        .map(friend => friend?.['id'])
+        .filter((value): value is string => typeof value === 'string' && value.length > 0)
+    );
+
+    if (this.currentUserUid) {
+      excludedIds.add(this.currentUserUid);
+    }
 
     querySnapshot.forEach((doc) => {
-      results.push({ id: doc.id, ...doc.data() });
+      if (!excludedIds.has(doc.id)) {
+        results.push({ id: doc.id, ...doc.data() });
+      }
     });
 
     return results;
@@ -297,7 +301,7 @@ export class SocialNetworkService {
 
     const chatId = this.chatIdFor(u1, u2);
     const messagesCol = collection(this.firestore, `Chats/${chatId}/Messages`);
-    const q = query(messagesCol, orderBy('createdAt', 'asc'));
+    const q = query(messagesCol, orderBy('createdAt', 'desc'));
     const snap = await getDocs(q);
     const msgs: any[] = [];
     snap.forEach(docSnap => {

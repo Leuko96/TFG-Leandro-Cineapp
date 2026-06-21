@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://api-inference.huggingface.co",
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

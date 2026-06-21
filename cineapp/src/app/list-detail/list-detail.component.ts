@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Movie } from '../entities/movie';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-list-detail',
@@ -21,10 +22,16 @@ export class ListDetailComponent implements OnInit{
   searchResults: any[] = [];
   isEditing = false;
   editList: any = { name: '', description: '', isPublic: false };
+  isOwner = false;
 
   readonly TMDB_BASE = 'https://image.tmdb.org/t/p/w500';
 
-  constructor(private route: ActivatedRoute, private firestore: Firestore, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private firestore: Firestore,
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
   async ngOnInit() {
     this.listId = this.route.snapshot.paramMap.get('id')?.toString()!;
@@ -40,7 +47,16 @@ export class ListDetailComponent implements OnInit{
     if (snap.exists()) {
       
       this.list = { id: snap.id, ...snap.data() };
+      const currentUserId = this.auth.getCurrentUser()?.uid || '';
+      this.isOwner = !!currentUserId && this.list?.userId === currentUserId;
       console.log(this.list);
+
+      // Si intenta acceder por URL a lista privada de otro usuario, lo redirigimos
+      if (!this.isOwner && !this.list?.isPublic) {
+        this.router.navigate(['/mylists']);
+        return;
+      }
+
       await this.loadMovies();
     }
   }
@@ -62,6 +78,7 @@ export class ListDetailComponent implements OnInit{
   }
 
   async searchMovies() {
+    if (!this.isOwner) return;
     this.router.navigate(["search-films"]);
     // if (!this.searchQuery.trim()) {
     //   this.searchResults = [];
@@ -76,6 +93,7 @@ export class ListDetailComponent implements OnInit{
   }
 
   async addToList(movieId: string) {
+    if (!this.isOwner) return;
     if (this.list.movieIds.includes(movieId)) return; // evitar duplicados
 
     this.list.movieIds.push(movieId);
@@ -91,6 +109,7 @@ export class ListDetailComponent implements OnInit{
   }
 
   async onRemove(movie:Movie){
+    if (!this.isOwner) return;
     const movies_list = this.list["movieIds"];
     console.log(movies_list);
     for(let i = 0; i<movies_list.length;i++){
@@ -108,6 +127,7 @@ export class ListDetailComponent implements OnInit{
   }
 
   openEdit() {
+    if (!this.isOwner) return;
     this.editList = { ...this.list }; // copiar datos actuales
     this.isEditing = true;
   }
@@ -117,6 +137,7 @@ export class ListDetailComponent implements OnInit{
   }
 
   async updateList() {
+    if (!this.isOwner) return;
     
     console.log("Guardando cambios:", this.editList);
 

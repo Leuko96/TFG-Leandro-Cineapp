@@ -2,7 +2,7 @@
   <div class="list-header">
     <h2>{{ list?.name }}</h2>
     <span class="count">{{ movies.length }} películas</span>
-    <div class="actions">
+    <div class="actions" *ngIf="isOwner">
       <button class="share-btn">🔗 Compartir</button>
       <button class="edit-btn" (click)="openEdit()">✏️ Editar</button>
     </div>
@@ -15,14 +15,14 @@
     <div class="movie-card" *ngFor="let movie of movies">
       <div class="poster-wrapper">
         <img [src]="getPoster(movie.poster_path)" [alt]="movie.title">
-        <button class="remove-btn" (click)="onRemove(movie)">✖</button>
+        <button class="remove-btn" *ngIf="isOwner" (click)="onRemove(movie)">✖</button>
       </div>
       <h4>{{ movie.title }}</h4>
     </div>
   
 
    <!-- Botón para añadir películas -->
-    <div class="add-movie-card" (click)="searchMovies()">
+    <div class="add-movie-card" *ngIf="isOwner" (click)="searchMovies()">
       <div class="add-icon">+</div>
       <div class="add-text">Añadir película</div>
     </div>
@@ -35,10 +35,10 @@
     <form (ngSubmit)="updateList()" class="create-form">
       <input type="text" [(ngModel)]="editList.name" name="name" placeholder="Nuevo nombre" required />
       <textarea [(ngModel)]="editList.description" name="description" placeholder="Nueva descripción"></textarea>
-      <label>Lista pública
+      <label class="checkbox-row">Lista pública
         <input type="checkbox" [(ngModel)]="editList.isPublic" name="isPublic" />
-        
-      </label>
+        </label>
+      
       <div class="modal-actions">
         <button type="submit">💾 Guardar</button>
         <button type="button" (click)="closeEdit()">❌ Cancelar</button>

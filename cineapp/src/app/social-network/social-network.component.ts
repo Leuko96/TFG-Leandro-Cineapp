@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { notificationType } from '../entities/notification';
@@ -19,7 +19,8 @@ import { NotificationsService } from '../services/notifications.service';
   templateUrl: './social-network.component.html',
   styleUrl: './social-network.component.css'
 })
-export class SocialNetworkComponent {
+export class SocialNetworkComponent implements AfterViewChecked {
+    @ViewChild('chatMessagesContainer', { static: false }) chatMessagesContainer?: ElementRef;
     isLoading: boolean = true
     listFriends: DocumentData[] = [];
     isSearching: boolean = false;
@@ -28,6 +29,8 @@ export class SocialNetworkComponent {
     nombre: string = "";
     email: string = "";
     usrUid:string = "";
+    avartar: string = "";
+    private shouldScroll: boolean = false;
     //Mensajes
     activeChatFriendId: string | null = null;
     activeChatFriendName: string = '';
@@ -43,6 +46,15 @@ export class SocialNetworkComponent {
     constructor(private auth: AuthService, 
                 private socialService: SocialNetworkService, private notificationSerice:NotificationsService,
                 private firestore: Firestore) {}
+
+    ngAfterViewChecked() {
+      if (this.shouldScroll && this.chatMessagesContainer) {
+        try {
+          this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer.nativeElement.scrollHeight;
+          this.shouldScroll = false;
+        } catch (err) {}
+      }
+    }
   
     async ngOnInit() {
       this.isLoading = true;
@@ -88,7 +100,7 @@ export class SocialNetworkComponent {
 
     async searchUsers() {
       this.isSearching = true;
-      this.searchResults = await this.socialService.searchUsersByName(this.searchTerm.trim());
+      this.searchResults = await this.socialService.searchUsersByName(this.searchTerm.trim(), this.listFriends);
       console.log("ESTO ES EL RESULTADO 0"+ this.searchResults[0]["id"]);
       this.isSearching = false;
     
@@ -121,6 +133,7 @@ export class SocialNetworkComponent {
           return { ...m, createdAt: dateObj };
         });
         this.chatMessages = norm;
+        this.shouldScroll = true;
         
         // Marcar mensajes no leídos del otro usuario como leídos
         this.markUnreadMessagesAsRead(friendId);

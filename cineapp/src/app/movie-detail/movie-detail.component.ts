@@ -15,6 +15,11 @@ import { useDeviceLanguage } from '@angular/fire/auth';
   styleUrl: './movie-detail.component.css'
 })
 export class MovieDetailComponent implements OnInit{
+
+  //Palomitas
+  numbers = Array.from({ length: 10 }, (_, i) => i + 1);
+  rating: number = 0;
+
   movieId: string="";
   movie: any;
   reviews: any[] = [];
@@ -52,20 +57,9 @@ export class MovieDetailComponent implements OnInit{
   }
 
 
-  // getUserById(id: string) {
-  //   const userDocRef = doc(this.firestore, `users/${id}`);
-  //   return docData(userDocRef, { idField: 'id' }); 
-  // }
-
-
   async loadMovie() {
     const docRef = collection(this.firestore, "Peliculas");
-  
-    // const snapshot = await getDoc(docRef);
-    // if (snapshot.exists()) {
-    //   this.movie = { id: snapshot.id, ...snapshot.data() };
-    // }
-    console.log(this.movieId);
+
 
     const userDocRef = doc(this.firestore, `Peliculas/${this.movieId}`);
     const peli = await getDoc(userDocRef);
@@ -94,20 +88,7 @@ export class MovieDetailComponent implements OnInit{
     else{
       return null;
     }
-    // const q = query(docRef, where("id", "==", this.movieId));
-    
-    // const querySnapshot = await getDocs(q);
 
-    // querySnapshot.forEach((doc)=>{console.log(doc.id, "=>", doc.data())})
-
-    // this.movie = { id: querySnapshot.docs.at(0)?.id, ...querySnapshot.docs.at(0)?.data() };
-    // console.log(querySnapshot.empty)
-
-
-    // this.movie = querySnapshot.docs.map(doc => ({
-    //   id: doc.id,        // guardamos el id del doc
-    //   ...doc.data()      // "spread": todos los campos del documento
-    // }));
   }
 
   async loadReviews() {
@@ -115,6 +96,7 @@ export class MovieDetailComponent implements OnInit{
     const q = query(reviewsRef, where("movieId", "==", this.movieId));
     const querySnapshot = await getDocs(q);
     this.reviews = querySnapshot.docs.map(d => d.data());
+    this.reviews.sort((a, b) => b.date.toMillis() - a.date.toMillis());
   }
 
   async addReview() {
@@ -123,37 +105,55 @@ export class MovieDetailComponent implements OnInit{
       alert("Debes iniciar sesión para dejar una review");
       return;
     }
-    // this.sentimentResult = await this.sentimentService.analyzeReview(this.newReview);
-    this.analyze();
-    console.log(this.sentimentResult);
+    if((!this.rating || this.rating===0) && this.newReview.trim().length === 0){
+      alert("Please, submit a rating or/and a review");
+      return;
+    }
     const reviewsRef = collection(this.firestore, "Reviews");
-    await addDoc(reviewsRef, {
+    const docAdded = await addDoc(reviewsRef, {
       movieId: this.movieId,
       userId: user.uid,
       email: user.email,
       text: this.newReview,
-      date: new Date()
+      date: new Date(),
+      rating: this.rating
     });
+  
+    const actionRef = collection(this.firestore, "Actions");
+    var extraInfo = "";
+    if(this.rating!=null && this.rating!==0){
+      console.log("rating: " + this.rating);
+      extraInfo = "Has puntuado " + this.title + " con " + this.rating + " palomitas ";
+      if(this.newReview !=null &&this.newReview.trim().length > 0){
+        extraInfo += " y has dejado la siguiente review: " + this.newReview;
+      }
     
+    }else if(this.newReview !=null && this.newReview.trim().length > 0){
+      extraInfo = "Has dejado la siguiente review sobre " + this.title + ": " + this.newReview;
+    }
+    console.log(extraInfo);
+    await addDoc(actionRef, { 
+      userId: user.uid,
+      movieId: this.movieId,
+      type: "review",
+      createdAt: new Date(),
+      extraInfo: extraInfo
+    });
+
     this.newReview = "";
     await this.loadReviews(); // recargar reviews
     
   }
 
-  analyze(){
-  //   if (this.newReview.trim()) {
-  //     this.sentimentService.analyzeReview(this.newReview).subscribe({
-  //       next: (res) => {
-  //         this.sentimentResult = res;
-  //         console.log(res); // ejemplo: [{ "label": "POSITIVE", "score": 0.98 }]
-  //       },
-  //       error: (err) => {
-  //         console.error('Error al analizar la review', err);
-  //       }
-  //     });
-  // }
-}
   goBack() {
     this.router.navigate(["/inicio"]);
   }
+  setRating(value: number) {
+    if(this.rating!=null && this.rating === value)
+      this.rating = 0; // deseleccionar si se hace clic en la misma calificación
+    else
+      this.rating = value;
+    console.log(this.rating);
+  }
+
 }

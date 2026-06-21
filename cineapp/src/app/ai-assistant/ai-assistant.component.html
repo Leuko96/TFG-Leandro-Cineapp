@@ -1,0 +1,105 @@
+<div class="page">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Asistente IA</p>
+      <h1>Combina dos películas y deja que la IA encuentre conexiones.</h1>
+      <p class="lede">Elige dos títulos que te gusten y obtén ideas nuevas basadas en temas, tono, géneros y atmósferas compartidas.</p>
+    </div>
+    <div class="pill">Beta · Gemini</div>
+  </header>
+
+  <section class="selectors">
+    <div class="selector-card">
+      <div class="selector-header">
+        <span>Película A</span>
+        <button class="ghost" (click)="clear('A')">Limpiar</button>
+      </div>
+      <input
+        type="text"
+        [(ngModel)]="searchA"
+        (input)="search(searchA, 'A')"
+        placeholder="Busca título"
+      />
+      <div class="chips" *ngIf="selectedA">
+        <div class="chip">
+          <img [src]="getPosterUrl(selectedA.poster_path, 'w185')" [alt]="selectedA.title" />
+          <div>
+            <strong>{{ selectedA.title }}</strong>
+            <p>{{ selectedA.genres }}</p>
+          </div>
+          <button class="ghost" (click)="clear('A')">✕</button>
+        </div>
+      </div>
+      <ul class="results" *ngIf="resultsA.length">
+        <li *ngFor="let movie of resultsA" (click)="select(movie, 'A')">
+          <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" />
+          <div>
+            <strong>{{ movie.title }}</strong>
+            <p>{{ movie.release_date }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="selector-card">
+      <div class="selector-header">
+        <span>Película B</span>
+        <button class="ghost" (click)="clear('B')">Limpiar</button>
+      </div>
+      <input
+        type="text"
+        [(ngModel)]="searchB"
+        (input)="search(searchB, 'B')"
+        placeholder="Busca título"
+      />
+      <div class="chips" *ngIf="selectedB">
+        <div class="chip">
+          <img [src]="getPosterUrl(selectedB.poster_path, 'w185')" [alt]="selectedB.title" />
+          <div>
+            <strong>{{ selectedB.title }}</strong>
+            <p>{{ selectedB.genres }}</p>
+          </div>
+          <button class="ghost" (click)="clear('B')">✕</button>
+        </div>
+      </div>
+      <ul class="results" *ngIf="resultsB.length">
+        <li *ngFor="let movie of resultsB" (click)="select(movie, 'B')">
+          <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" />
+          <div>
+            <strong>{{ movie.title }}</strong>
+            <p>{{ movie.release_date }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button class="primary" (click)="generate()" [disabled]="loading">
+      <span *ngIf="!loading">Generar ideas</span>
+      <span *ngIf="loading" class="spinner"></span>
+    </button>
+    <p class="hint">La IA no guarda datos de tus selecciones.</p>
+  </div>
+
+  <div class="alert" *ngIf="error">{{ error }}</div>
+
+  <section class="recommendations" *ngIf="recommendations.length">
+    <header>
+      <h2>Ideas para ver</h2>
+      <p>10 sugerencias generadas por IA a partir de tus dos peliculas seleccionadas.</p>
+    </header>
+    <div class="grid">
+      <article class="card" *ngFor="let rec of recommendations">
+        <div class="card-header">
+          <div class="dot"></div>
+          <h3>{{ rec.title }}</h3>
+        </div>
+        <p class="reason">{{ rec.reason }}</p>
+        <div class="tags">
+          <span class="tag" *ngFor="let point of rec.commonPoints">{{ point }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>

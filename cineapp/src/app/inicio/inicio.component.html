@@ -2,7 +2,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <h2>Menú</h2>
+      <h2>Menu</h2>
     </div>
 
     <div class="menu-item" routerLink="/search-films" routerLinkActive="active">
@@ -10,10 +10,15 @@
       <div class="menu-text">Buscar</div>
     </div>
 
-    <div class="menu-item" routerLink="/load-movies" routerLinkActive="active">
+    <!-- <div class="menu-item" routerLink="/load-movies" routerLinkActive="active">
       <div class="menu-icon">⭐</div>
       <div class="menu-text">Recomendaciones</div>
-    </div>
+    </div> -->
+
+    <div class="menu-item" routerLink="/ai-assistant" routerLinkActive="active">
+          <div class="menu-icon">🤖</div>
+          <div class="menu-text">AI assistant</div>
+        </div>
 
     <div class="menu-item" routerLink="/socialNetwork" routerLinkActive="active">
       <div class="menu-icon">👥</div>
@@ -33,14 +38,9 @@
 
   <!-- Main Content -->
   <div class="main-content">
-    <div class="profile-summary">
-      <img [src]="'assets/avatar-default.png'" alt="Logo del usuario" class="user-logo">
-      <h3>Bienvenido, {{ nombre }} {{ apellido1 }} {{ apellido2 }}</h3>
-      <p>Miembro desde: {{ fecharegistro | date:'dd/MM/yyyy' }}</p>
-    </div>
 
-    <!-- Notifications -->
-    <div class="notification-wrapper">
+    <!-- Notificaciones flotantes (fuera de los paneles de contenido) -->
+    <div class="floating-notifications">
       <button class="notif-btn" (click)="toggleNotifications()">
         🔔 Notifications
         <span *ngIf="hasUnreadNotifications" class="badge">
@@ -55,35 +55,115 @@
         </div>
 
         <div *ngFor="let notif of notificationsList" class="notif-item" [class.read]="notif.read">
-        <div class="notif-text">{{ notif.text }}</div>
+          <div class="notif-text">{{ notif.text }}</div>
 
-        <!-- BOTONES DE SOLICITUD -->
-        <div class="notif-actions" *ngIf="notif.type==enumBoolean.FriendRequest">
-          <button class="btn-accept" (click)="addFriendFromNot(notif.id)">Accept</button>
-          <button class="btn-reject" (click)="removeNotification(notif.id)">Reject</button>
+          <div class="notif-actions" *ngIf="notif.type==enumBoolean.FriendRequest">
+            <button class="btn-accept" (click)="addFriendFromNot(notif.id)">Accept</button>
+            <button class="btn-reject" (click)="removeNotification(notif.id)">Reject</button>
+          </div>
+
+          <small class="notif-date">
+            {{ (notif.date ? notif.date.toDate() : notif.date) | date:'short' }}
+          </small>
         </div>
-
-        <!-- FECHA -->
-        <small class="notif-date">
-          {{ (notif.date ? notif.date.toDate() : notif.date) | date:'short' }}
-        </small>
-
-        <!-- MARCAR LEÍDO
-        <button *ngIf="!notif.read" class="btn-read" (click)="markRead(notif.id)">✔</button> -->
-      </div>
-
       </div>
     </div>
-    <!-- /Notifications -->
 
-    <div class="recommendations">
+    <div class="profile-summary">
+      <img [src]="avatar" alt="Logo del usuario" class="user-logo">
+      <div class="profile-info">
+        <h3>Bienvenido, {{ nombre }} {{ apellido1 }} {{ apellido2 }}</h3>
+        <p>Miembro desde: {{ fecharegistro | date:'dd/MM/yyyy' }}</p>
+      </div>
+    </div>
+
+    <!-- <div class="recommendations">
       <h4>Recomendaciones para ti</h4>
       <div class="movie-grid"></div>
-    </div>
+    </div> -->
 
-    <div class="activity-feed">
-      <h4>Actividad reciente</h4>
-    </div>
+    <section class="news-panel" aria-label="Noticias recientes de cine">
+      <div class="news-panel__header">
+        <div>
+          <h4 class="news-panel__title">Noticias recientes de cine</h4>
+          <p class="news-panel__subtitle">Últimos titulares y novedades del sector</p>
+        </div>
+
+        <div class="news-actions">
+          <button class="news-arrow-btn" (click)="prevNewsPage()" [disabled]="totalNewsPages <= 1" aria-label="Noticias anteriores">◀</button>
+          <button class="news-arrow-btn" (click)="nextNewsPage()" [disabled]="totalNewsPages <= 1" aria-label="Siguientes noticias">▶</button>
+
+          <!-- <span class="news-panel__tag">Firestore</span> -->
+        </div>
+      </div>
+
+      <div *ngIf="newsLoading && newsList.length === 0" class="loading-skeleton">
+        <p>Cargando noticias...</p>
+      </div>
+
+      <div *ngIf="newsError && !newsLoading" class="error-message">
+        <p>{{ newsError }}</p>
+      </div>
+
+      <div class="news-grid" *ngIf="!newsLoading || newsList.length > 0">
+        <article class="news-card" *ngFor="let news of visibleNews">
+          <div class="news-card__image-wrap">
+            <img
+              [src]="news.image"
+              [alt]="news.title"
+              class="news-card__image"
+              (error)="onNewsImageError($event)"
+            />
+          </div>
+
+          <div class="news-card__content">
+            <h5 class="news-card__title">{{ news.title }}</h5>
+            <p class="news-card__excerpt">{{ news.description }}</p>
+            <div class="news-card__meta">
+              <span>{{ news.source?.name || 'Sin fuente' }}</span>
+              <span>•</span>
+              <span>{{ news.publishedAt | date:'short' }}</span>
+            </div>
+            <a class="news-card__link" [href]="news.url" target="_blank" rel="noopener noreferrer">Leer más</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+
+    <section class="activity-feed" aria-label="Actividad reciente">
+      <div class="activity-feed__header">
+        <h4>Actividad reciente</h4>
+        <span class="activity-feed__hint">Ultimas 10 acciones</span>
+      </div>
+
+      <div *ngIf="recentActionsLoading" class="activity-feed__state">
+        Cargando actividad...
+      </div>
+
+      <div *ngIf="recentActionsError && !recentActionsLoading" class="activity-feed__error">
+        {{ recentActionsError }}
+      </div>
+
+      <div *ngIf="!recentActionsLoading && !recentActionsError && recentActions.length === 0" class="activity-feed__state">
+        Aun no tienes actividad de reviews o listas.
+      </div>
+
+      <ul class="activity-list" *ngIf="!recentActionsLoading && !recentActionsError && recentActions.length > 0">
+        <li class="activity-item" *ngFor="let action of recentActions | slice:0:10">
+          <div class="activity-item__icon">{{ getActionIcon(action.type) }}</div>
+
+          <div class="activity-item__content">
+            <div class="activity-item__top">
+              <span class="activity-item__tag">{{ getActionLabel(action.type) }}</span>
+              <span class="activity-item__time" *ngIf="action.createdAt">{{ action.createdAt | date:'short' }}</span>
+            </div>
+
+            <p class="activity-item__text">{{ action.extraInfo }}</p>
+          </div>
+        </li>
+      </ul>
+    </section>
 
     <div [@routeAnimations]="prepareRoute(outlet)">
       <router-outlet #outlet="outlet"></router-outlet>

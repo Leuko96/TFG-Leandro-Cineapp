@@ -1,6 +1,7 @@
 .list-detail {
   padding: 2rem;
-  color: #fff;
+    cursor: pointer;
+  color: var(--text);
 }
 
 .list-header {
@@ -11,17 +12,16 @@
 }
 
 .list-header h2 {
-  font-family: 'Playfair Display', serif;
   font-size: 2rem;
   margin: 0;
 }
 
 .count {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
   padding: 0.3rem 0.7rem;
   border-radius: 12px;
   font-size: 0.9rem;
-  color: #ddd;
+  color: var(--text);
 }
 
 .actions {
@@ -31,31 +31,32 @@
 }
 
 .actions button {
-  background: rgba(255,255,255,0.15);
-  border: none;
-  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 0.4rem 0.8rem;
-  color: #fff;
+  color: var(--text);
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .actions button:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(30, 41, 59, 0.75);
 }
 
 .description {
   margin-bottom: 1.5rem;
   font-style: italic;
-  color: #bbb;
+  color: var(--muted);
 }
 
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
-  background: #3f236f;
-  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
   padding: 1rem;
   margin-bottom: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -63,16 +64,23 @@
 
  
 .movie-card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.45);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   overflow: hidden;
   text-align: center;
   position: relative;
-  transition: transform 0.2s;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.movie-card * {
+  cursor: pointer;
 }
 
 .movie-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
 .poster-wrapper {
@@ -108,7 +116,7 @@
 .movie-card h4 {
   margin: 0.6rem;
   font-size: 1rem;
-  color: #fff;
+  color: var(--text);
 }
 
 
@@ -119,7 +127,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(2, 6, 23, 0.72);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,10 +136,11 @@
 
 /* Caja modal */
 .modal {
-  background: #fff;
-  color: #333;
+  background: rgba(2, 6, 23, 0.96);
+  color: var(--text);
   padding: 2rem;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
   width: 400px;
   max-width: 90%;
   display: flex;
@@ -139,8 +148,7 @@
 }
 
 .modal h2 {
-  font-family: 'Playfair Display', serif;
-  color: #3f51b5;
+  color: var(--accent-2);
   margin-bottom: 1.5rem;
   margin-top: 0;
 }
@@ -161,44 +169,39 @@
 }
 
 .modal-actions button:first-child {
-  background: #3f51b5;
-  color: #fff;
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text);
 }
 
 .modal-actions button:first-child:hover {
-  background: #2c3e9f;
+  background: rgba(30, 41, 59, 0.75);
 }
 
 .modal-actions button:last-child {
-  background: #ccc;
-  color: #333;
+  background: rgba(100, 116, 139, 0.35);
+  color: var(--text);
 }
 
 .modal-actions button:last-child:hover {
-  background: #aaa;
+  background: rgba(148, 163, 184, 0.35);
 }
 
-/* .create-form *{
-  display: flex;
-  margin-bottom: 1rem;
-} */
-
-/* --------------------------- */
 
 
 .create-section {
-  background: #fff;
-  color: #333;
+  background: var(--panel);
+  color: var(--text);
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   height: fit-content;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
 }
 
 .create-section h2 {
-  font-family: 'Playfair Display', serif;
-  color: #3f51b5;
+  color: var(--accent-2);
   margin-bottom: 2rem;
   margin-top: 0;
 }
@@ -212,27 +215,26 @@
 .create-form input,
 .create-form textarea {
   padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
   font-size: 0.95rem;
-  font-family: 'Poppins', sans-serif;
 }
 textarea{
   height: 10rem;
 }
 .create-form button {
   padding: 0.6rem;
-  background: #3f51b5;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   /* transition: background 0.3s; */
 }
 
 .create-form button:hover {
-  background: #2c3e9f;
+  background: rgba(30, 41, 59, 0.75);
 }
 /* .create-form input{
   margin-bottom: 1rem;
@@ -240,8 +242,8 @@ textarea{
 
 /* Estilos para el botón de añadir película */
 .add-movie-card {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -253,7 +255,7 @@ textarea{
 }
 
 .add-movie-card:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-4px);
 }
@@ -277,6 +279,17 @@ textarea{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
+}
+
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* 👈 esto separa checkbox y texto */
+}
+.checkbox-row input[type="checkbox"] {
+  width: min-content;
+  height: max-content;
 }
 
 /* Responsividad para pantallas más pequeñas */

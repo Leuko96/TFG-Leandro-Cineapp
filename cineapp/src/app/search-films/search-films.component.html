@@ -12,6 +12,23 @@
     <button (click)="search()">🔍</button>
   </div>
 
+  <section class="recent-panel" *ngIf="showRecentSearchesPanel">
+    <div class="recent-header">
+      <h3>Ultimas búsquedas</h3>
+    </div>
+
+    <div class="recent-grid">
+      <article class="recent-card" *ngFor="let item of recentSearches | slice:0:5" (click)="goToDetail(item.id)">
+        <img [src]="getPosterUrl(item.poster_path || '', 'w500')" [alt]="item.title" />
+        <div class="recent-info">
+          <h4>{{ item.title }}</h4>
+        </div>
+      </article>
+    </div>
+  </section>
+
+ 
+
   <!-- Resultados -->
   <div class="results" *ngIf="results.length > 0; else noResults">
     <h3>Resultados de {{titulo}}</h3>

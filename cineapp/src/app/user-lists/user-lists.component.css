@@ -4,20 +4,20 @@
   grid-template-columns: 2fr 1fr; /* izquierda más grande */
   gap: 2rem;
   padding: 2rem;
-  font-family: 'Poppins', sans-serif;
-  color: #fff;
+  color: var(--text);
 }
 
 /* Sección de listas */
 .lists-section {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--panel);
+  border: 1px solid var(--border);
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
   backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
 }
 
 .lists-section h2 {
-  font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   margin-bottom: 1rem;
 }
@@ -29,8 +29,9 @@
 }
 
 .list-card {
-  background: #3f236f;
-  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.48);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   padding: 1rem;
   margin-bottom: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -42,16 +43,15 @@
 }
 
 .list-info h3 {
-  font-family: 'Playfair Display', serif;
   margin: 0;
   font-size: 1.3rem;
-  color: #fff;
+  color: var(--text);
 }
 
 .list-info p {
   margin: 0.3rem 0 0;
   font-size: 0.95rem;
-  color: #ccc;
+  color: var(--muted);
 }
 
 .list-meta {
@@ -59,23 +59,24 @@
   justify-content: space-between;
   margin-top: 0.5rem;
   font-size: 0.85rem;
-  color: #ddd;
+  color: var(--muted);
 }
 
 /* Panel de creación */
 .create-section {
-  background: #fff;
-  color: #333;
+  background: var(--panel);
+  color: var(--text);
   padding: 1.5rem;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   height: fit-content;
+  box-shadow: var(--shadow-soft);
 }
 
 .create-section h2 {
-  font-family: 'Playfair Display', serif;
-  color: #3f51b5;
+  color: var(--accent-2);
   margin-bottom: 2rem;
   margin-top: 0;
 }
@@ -89,23 +90,32 @@
 .create-form input,
 .create-form textarea {
   padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
   font-size: 0.95rem;
-  font-family: 'Poppins', sans-serif;
 }
 
 .create-form button {
   padding: 0.6rem;
-  background: #3f51b5;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   /* transition: background 0.3s; */
 }
 
 .create-form button:hover {
-  background: #2c3e9f;
+  background: rgba(30, 41, 59, 0.75);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* 👈 esto separa checkbox y texto */
+}
+.checkbox-row input[type="checkbox"] {
+  width: min-content;
+  height: max-content;
 }

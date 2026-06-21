@@ -1,21 +1,51 @@
-<div class="cuadrado">
+<section class="auth-shell login-shell">
+    <article class="auth-panel auth-copy">
+        <p class="auth-eyebrow">Movieffaut</p>
+        <h1>Tu universo de cine en un solo lugar</h1>
+        <p>
+            Guarda tus peliculas favoritas, comparte listas con amigos y descubre noticias de cine
+            sin salir de la app.
+        </p>
+        <ul class="auth-highlights">
+            <li>Listas personalizadas y colaborativas</li>
+            <li>Resenas y recomendaciones de la comunidad</li>
+            <li>Noticias actualizadas del mundo del cine</li>
+        </ul>
+    </article>
 
-    <form (ngSubmit)="login()">
-        <label for="nombre">Email</label>
-        <input type="text" id="nombre" [(ngModel)]="loginInfo.email" name="nombre" required>
+    <article class="auth-panel auth-form-panel">
+        <h2>Iniciar sesion</h2>
+        <p class="auth-subtitle">Accede para continuar en tu perfil cinéfilo.</p>
 
-        <!-- <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required> -->
+        <form class="auth-form" (ngSubmit)="login()">
+            <label for="login-email">Email</label>
+            <input
+                type="email"
+                id="login-email"
+                [(ngModel)]="loginInfo.email"
+                name="email"
+                required
+                autocomplete="email"
+            >
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" [(ngModel)]="loginInfo.password" name="password" required>
-        <!-- <a>{{loginInfo.email}}</a> -->
-        
-        <button type="submit" routerLink="/register" routerLinkActive="active" class="btn btn-primary mb-3">Register</button>
-        
-        <button class="btn btn-primary mb-3">Log in</button>
-        <div *ngIf="error" class="alert alert-danger" role="alert">
-            {{error}}
-        </div>
-    </form>
-</div>
+            <label for="login-password">Contrasena</label>
+            <input
+                type="password"
+                id="login-password"
+                [(ngModel)]="loginInfo.password"
+                name="password"
+                required
+                autocomplete="current-password"
+            >
+
+            <div class="auth-actions">
+                <button type="submit" class="primary-action">Entrar</button>
+                <button type="button" class="secondary-action" routerLink="/register">Crear cuenta</button>
+            </div>
+
+            <div *ngIf="error" class="auth-error" role="alert">
+                {{error}}
+            </div>
+        </form>
+    </article>
+</section>

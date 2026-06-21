@@ -1,25 +1,221 @@
+/* Global cinematic theme */
+:root {
+  --bg-1: #0b1020;
+  --bg-2: #1b1440;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-strong: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.14);
+  --text: #e5e7eb;
+  --muted: #a1a1aa;
+  --accent: #a855f7;
+  --accent-2: #c084fc;
+  --ok: #22c55e;
+  --danger: #ef4444;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 10px;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.18);
+  --shadow-strong: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
 /* Reset básico */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  
-  /* Fondo morado cinematográfico - FORZADO */
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #6a0dad 0%, #2d0b59 100%) !important;
-    background-attachment: fixed !important;
-    min-height: 100vh !important;
-    color: white !important;
-  }
-  
-  /* Contenedor raíz de Angular */
-  app-root {
-    display: block;
-    min-height: 100vh;
-    position: relative;
-  }
-    h1, h2, h3 {
-      font-family: 'Playfair Display', serif;
-    }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 10% 15%, #2f2a7c 0%, transparent 35%),
+    radial-gradient(circle at 85% 85%, #5a1d8f 0%, transparent 30%),
+    linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  background-attachment: fixed;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Shared surfaces */
+.glass-panel,
+.panel,
+.card-surface,
+.settings-section,
+.admin-panel,
+.selector-card,
+.friend-card,
+.list-card,
+.movie-card,
+.news-card,
+.profile-summary,
+.recommendations,
+.news-panel,
+.activity-feed,
+.friends-section,
+.lists-section,
+.search-container,
+.cuadrado {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(8px);
+}
+
+/* Shared typography */
+.section-title,
+.panel-title,
+.page-title,
+.news-panel__title,
+.settings-section h3,
+.friends-section h2,
+.lists-section h2,
+.admin-panel h2,
+.results h3 {
+  margin-top: 0;
+  color: var(--text);
+}
+
+.muted,
+.news-panel__subtitle,
+.profile-summary p,
+.notif-date,
+.loading-skeleton,
+.error-message {
+  color: var(--muted);
+}
+
+/* Shared controls */
+button,
+.btn,
+.ghost,
+.notif-btn,
+.refresh-btn,
+.news-arrow-btn,
+.chat-btn,
+.add-small-btn,
+.close-btn,
+.action-btn,
+.menu-item {
+  transition: all 0.2s ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border-radius: 12px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.45);
+  color: var(--text);
+  padding: 0.75rem 0.9rem;
+  outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8b8b96;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(192, 132, 252, 0.7);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.18);
+}
+
+button:hover,
+.menu-item:hover {
+  transform: translateY(-1px);
+}
+
+/* Shared cards */
+.movie-grid,
+.news-grid,
+.friend-list,
+.list-grid,
+.results,
+.selectors,
+.form-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.news-card__link,
+.menu-item.active,
+.notif-btn,
+.refresh-btn,
+.news-arrow-btn,
+.btn,
+.ghost {
+  color: var(--text);
+}
+
+.btn-primary,
+.action-btn.primary,
+.refresh-btn,
+.news-arrow-btn,
+.notif-btn {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border);
+}
+
+.btn-primary:hover,
+.action-btn.primary:hover,
+.refresh-btn:hover:not(:disabled),
+.news-arrow-btn:hover:not(:disabled),
+.notif-btn:hover {
+  border-color: rgba(192, 132, 252, 0.55);
+  background: rgba(30, 41, 59, 0.75);
+}
+
+.btn-danger,
+.btn-reject,
+.action-btn.danger {
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.btn-success,
+.btn-accept,
+.action-btn.success {
+  background: rgba(34, 197, 94, 0.16);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #86efac;
+}
+
+/* App-shell helpers for page templates */
+.page-shell {
+  min-height: 100vh;
+  padding: 1.25rem;
+}
+
+.page-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}

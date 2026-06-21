@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Login, UsuarioSesion, Rol } from "../entities/login";
 import { Observable, of, forkJoin, concatMap, lastValueFrom } from "rxjs";
-import { map } from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import * as jose from 'jose';
 
 import { Usuario } from "../entities/usuario";
@@ -29,7 +29,6 @@ export class UsuariosService {
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
         fecha_registro: obj.usuario.fecha_registro,
-        avatar: obj.usuario.avatar,
         // roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
         jwt: obj.jwt
       };
@@ -64,10 +63,9 @@ export class UsuariosService {
     }
   }
 
-  
-
-
-
+  public get rolCentro(): String | undefined {
+    return "ROLCENTRO";
+  }
 
   // set rolCentro(r: RolCentro | undefined) {
   //   this._rolCentro = r;
